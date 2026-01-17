@@ -1,0 +1,1079 @@
+{
+  "schemaVersion": "1.0",
+  "institution": "National University of Singapore",
+  "faculty": "Computing",
+  "programmes": [
+    {
+      "degree": "Bachelor of Computing",
+      "faculty": "Computing",
+      "major": "Computer Science",
+      "units": 160,
+      "course": {
+        "commonCore": {
+          "units": 40,
+          "categories": [
+            {
+              "name": "University Level Requirements",
+              "units": 24,
+              "requirements": [
+                {
+                  "name": "Digital Literacy",
+                  "units": 4,
+                  "options": ["CS1101S"]
+                },
+                {
+                  "name": "Critique and Expression",
+                  "units": 4,
+                  "options": ["ES2660"]
+                },
+                {
+                  "name": "Cultures and Connections",
+                  "units": 4,
+                  "options": ["GEC1001", "GEC1002", "GEC1003", "GEC1004", "GEC1005", "GEC1006", "GEC1007", "GEC1008", "GEC1009", "GEC1010"]
+                },
+                {
+                  "name": "Data Literacy",
+                  "units": 4,
+                  "options": ["GEA1000", "BT1101", "ST1131", "DSA1101"]
+                },
+                {
+                  "name": "Singapore Studies",
+                  "units": 4,
+                  "options": ["GES1001", "GES1002", "GES1003", "GES1004", "GES1005", "GES1006", "GES1007", "GES1008", "GES1009", "GES1010"]
+                },
+                {
+                  "name": "Communities and Engagement",
+                  "units": 4,
+                  "options": ["GEN2001", "GEN2002", "GEN2003", "GEN2004", "GEN2005", "GEN2006", "GEN2007", "GEN2008", "GEN2009", "GEN2010"]
+                }
+              ]
+            },
+            {
+              "name": "Computing Ethics",
+              "units": 4,
+              "requirements": [
+                {
+                  "name": "Computing Ethics",
+                  "units": 4,
+                  "options": ["IS1108"]
+                }
+              ]
+            },
+            {
+              "name": "Interdisciplinary & Cross-Disciplinary",
+              "units": 12,
+              "requirements": [
+                {
+                  "name": "Interdisciplinary Courses",
+                  "units": 8,
+                  "options": []
+                },
+                {
+                  "name": "Cross-Disciplinary Courses",
+                  "units": 4,
+                  "options": []
+                }
+              ]
+            }
+          ]
+        },
+        "core": {
+          "units": 80,
+          "categories": [
+            {
+              "name": "Computer Science Foundation",
+              "units": 36,
+              "options": [
+                "CS1231S",
+                "CS2030S",
+                "CS2040S",
+                "CS2100",
+                "CS2101",
+                "CS2103T",
+                "CS2106",
+                "CS2109S",
+                "CS3230"
+              ]
+            },
+            {
+              "name": "Mathematics and Sciences",
+              "units": 12,
+              "options": [
+                "MA1521",
+                "MA1522",
+                "ST2334"
+              ]
+            },
+            {
+              "name": "Computer Science Breadth and Depth",
+              "units": 32,
+              "requirements": [
+                {
+                  "name": "Focus Area Requirements",
+                  "units": 12,
+                  "options": []
+                },
+                {
+                  "name": "Level 4000+ Modules",
+                  "units": 12,
+                  "options": []
+                },
+                {
+                  "name": "Industry Experience",
+                  "units": 6,
+                  "options": ["CP3880", "CP3200", "CP3202", "CP3204", "CP3208", "CP3209", "CP4101"]
+                }
+              ]
+            }
+          ]
+        },
+        "focusArea": {
+          "focusAreaCount": 1,
+          "options": [
+            {
+              "name": "Algorithms and Theory",
+              "code": "ALG",
+              "units": 12,
+              "primaryOptions": [
+                "CS3230",
+                "CS3231",
+                "CS3236",
+                "CS4231",
+                "CS4234"
+              ],
+              "electiveOptions": [
+                "CS3233",
+                "CS4257",
+                "CS4261",
+                "CS4268",
+                "CS4269",
+                "CS4330",
+                "CS5230",
+                "CS5234",
+                "CS5236",
+                "CS5237",
+                "CS5238",
+                "CS5330"
+              ]
+            },
+            {
+              "name": "Artificial Intelligence",
+              "code": "AI",
+              "units": 12,
+              "primaryOptions": [
+                "CS2109S",
+                "CS3243",
+                "CS3244",
+                "CS3263",
+                "CS3264",
+                "CS3268",
+                "CS4243",
+                "CS4244",
+                "CS4246",
+                "CS4248",
+                "CS4262"
+              ],
+              "electiveOptions": [
+                "CS4220",
+                "CS4261",
+                "CS4269",
+                "CS4277",
+                "CS4278",
+                "CS5215",
+                "CS5228",
+                "CS5242",
+                "CS5260",
+                "CS5340",
+                "CS5339"
+              ]
+            },
+            {
+              "name": "Computer Graphics and Games",
+              "code": "CGG",
+              "units": 12,
+              "primaryOptions": [
+                "CS3241",
+                "CS3242",
+                "CS3247",
+                "CS4247",
+                "CS4350"
+              ],
+              "electiveOptions": [
+                "CS3218",
+                "CS3240",
+                "CS3249",
+                "CS4240",
+                "CS4243",
+                "CS4249",
+                "CS4351",
+                "CS5237",
+                "CS5240",
+                "CS5343",
+                "CS5346"
+              ]
+            },
+            {
+              "name": "Computer Security",
+              "code": "SEC",
+              "units": 12,
+              "primaryOptions": [
+                "CS2107",
+                "CS3235",
+                "CS4236",
+                "CS4230",
+                "CS4238",
+                "CS4239"
+              ],
+              "electiveOptions": [
+                "CS3221",
+                "CS4257",
+                "CS4276",
+                "CS5231",
+                "CS5250",
+                "CS5321",
+                "CS5322",
+                "CS5331",
+                "CS5332",
+                "IFS4101",
+                "IFS4102",
+                "IFS4103"
+              ]
+            },
+            {
+              "name": "Database Systems",
+              "code": "DBS",
+              "units": 12,
+              "primaryOptions": [
+                "CS2102",
+                "CS3223",
+                "CS4221",
+                "CS4224",
+                "CS4225"
+              ],
+              "electiveOptions": [
+                "CS4220",
+                "CS5226",
+                "CS5228",
+                "CS5322"
+              ]
+            },
+            {
+              "name": "Multimedia Information Retrieval",
+              "code": "MIR",
+              "units": 12,
+              "primaryOptions": [
+                "CS2108",
+                "CS3245",
+                "CS4242",
+                "CS4248",
+                "CS4347"
+              ],
+              "electiveOptions": [
+                "CS5246",
+                "CS5241"
+              ]
+            },
+            {
+              "name": "Networking and Distributed Systems",
+              "code": "NDS",
+              "units": 12,
+              "primaryOptions": [
+                "CS2105",
+                "CS3103",
+                "CS4222",
+                "CS4226",
+                "CS4231"
+              ],
+              "electiveOptions": [
+                "CS3237",
+                "CS4344",
+                "CS5223",
+                "CS5224",
+                "CS5229",
+                "CS5248",
+                "CS5321"
+              ]
+            },
+            {
+              "name": "Parallel Computing",
+              "code": "PAR",
+              "units": 12,
+              "primaryOptions": [
+                "CS3210",
+                "CS3211",
+                "CS4231",
+                "CS4223"
+              ],
+              "electiveOptions": [
+                "CS5222",
+                "CS5223",
+                "CS5224",
+                "CS5239",
+                "CS5250"
+              ]
+            },
+            {
+              "name": "Programming Languages",
+              "code": "PL",
+              "units": 12,
+              "primaryOptions": [
+                "CS2104",
+                "CS3211",
+                "CS4212",
+                "CS4215"
+              ],
+              "electiveOptions": [
+                "CS3234",
+                "CS4216",
+                "CS5232",
+                "CS5214",
+                "CS5215",
+                "CS5218"
+              ]
+            },
+            {
+              "name": "Software Engineering",
+              "code": "SE",
+              "units": 12,
+              "primaryOptions": [
+                "CS2103T",
+                "CS3213",
+                "CS3217",
+                "CS3219",
+                "CS3282",
+                "CS4211",
+                "CS4218",
+                "CS4239"
+              ],
+              "electiveOptions": [
+                "CS3203",
+                "CS3281",
+                "CS3216",
+                "CS3226",
+                "CS3234",
+                "CS5219",
+                "CS5232",
+                "CS5272"
+              ]
+            }
+          ]
+        },
+        "unrestrictedElectives": {
+          "units": 40
+        }
+      },
+      "notes": [
+        "Students without A-level or H2 Mathematics must complete MA1301/X or equivalent",
+        "For focus area, students have to complete 12 units from the primaryOptions, electiveOptions are totally optional",
+        "CS2103T and CS2101 must be taken together",
+        "At least two Interdisciplinary courses required",
+        "No more than one Cross-Disciplinary course",
+        "Industry Experience: 6-12 units required, can be replaced by CP4101 if CAP >= 4.0",
+        "Minimum 12 units at level 4000 or above required"
+      ]
+    },
+    {
+      "degree": "Bachelor of Science",
+      "faculty": "Computing",
+      "major": "Business Analytics",
+      "units": 160,
+      "course": {
+        "commonCore": {
+          "units": 40,
+          "categories": [
+            {
+              "name": "University Level Requirements",
+              "units": 24,
+              "requirements": [
+                {
+                  "name": "Digital Literacy",
+                  "units": 4,
+                  "options": ["CS1010A"]
+                },
+                {
+                  "name": "Critique and Expression",
+                  "units": 4,
+                  "options": ["GEX%"]
+                },
+                {
+                  "name": "Cultures and Connections",
+                  "units": 4,
+                  "options": ["GEC%"]
+                },
+                {
+                  "name": "Data Literacy",
+                  "units": 4,
+                  "options": ["BT1101"]
+                },
+                {
+                  "name": "Singapore Studies",
+                  "units": 4,
+                  "options": ["GES%"]
+                },
+                {
+                  "name": "Communities and Engagement",
+                  "units": 4,
+                  "options": ["GEN%"]
+                }
+              ]
+            },
+            {
+              "name": "Computing Ethics",
+              "units": 4,
+              "requirements": [
+                {
+                  "name": "Digital Ethics and Data Privacy",
+                  "units": 4,
+                  "options": ["IS1108"]
+                }
+              ]
+            },
+            {
+              "name": "Interdisciplinary & Cross-Disciplinary",
+              "units": 12,
+              "requirements": [
+                {
+                  "name": "Interdisciplinary Courses",
+                  "units": 8,
+                  "options": []
+                },
+                {
+                  "name": "Cross-Disciplinary Courses",
+                  "units": 4,
+                  "options": []
+                }
+              ]
+            }
+          ]
+        },
+        "core": {
+          "units": 80,
+          "categories": [
+            {
+              "name": "Core Courses",
+              "units": 60,
+              "options": [
+                "MA1521",
+                "MA1522",
+                "BT2101",
+                "BT2102",
+                "CS2030",
+                "CS2040",
+                "IS2101",
+                "ST2334",
+                "BT3103",
+                "IS3103",
+                "BT4103",
+                "BT4101"
+              ]
+            },
+            {
+              "name": "Programme Electives",
+              "units": 20,
+              "categories": [
+                {
+                  "name": "Business Applications",
+                  "options": [
+                    "IE3120",
+                    "IS3150",
+                    "IS3240",
+                    "BT4013",
+                    "BT4016",
+                    "BT4211",
+                    "BT4212",
+                    "DBA4811",
+                    "IS4241",
+                    "IS4242",
+                    "IS4250",
+                    "IS4262"
+                  ]
+                },
+                {
+                  "name": "Analytics Methods",
+                  "options": [
+                    "BT3017",
+                    "BT3102",
+                    "BT3104",
+                    "CS3243",
+                    "CS3244",
+                    "CS4248",
+                    "BT4012",
+                    "BT4015",
+                    "BT4221",
+                    "BT4222",
+                    "BT4240",
+                    "BT4241",
+                    "ST4245"
+                  ]
+                },
+                {
+                  "name": "Technology Implementation",
+                  "options": [
+                    "IS3107",
+                    "IS3221",
+                    "BT4014",
+                    "BT4301",
+                    "IS4226",
+                    "IS4228",
+                    "IS4234",
+                    "IS4246",
+                    "IS4302",
+                    "IS4303"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "unrestrictedElectives": {
+          "units": 40
+        }
+      },
+      "notes": [
+        "All courses are 4 units unless stated otherwise",
+        "No formal specialisations for Business Analytics",
+        "Students may freely choose electives within programme rules",
+        "Students must satisfy all prerequisites before taking courses",
+        "BT4103 is an 8-unit capstone project",
+        "BT4101 satisfies dissertation or industry experience requirements",
+        "At least two Interdisciplinary courses required",
+        "No more than one Cross-Disciplinary course",
+        "Programme Electives: Complete 5 electives (20 units), at least 3 Level-4000 courses, at least 3 BT-coded courses"
+      ]
+    },
+    {
+      "degree": "Bachelor of Computing",
+      "faculty": "Computing",
+      "major": "Artificial Intelligence",
+      "units": 160,
+      "course": {
+        "commonCore": {
+          "units": 40,
+          "categories": [
+            {
+              "name": "University Level Requirements",
+              "units": 24,
+              "requirements": [
+                {
+                  "name": "Critique and Expression",
+                  "units": 4,
+                  "options": ["ES2660"]
+                },
+                {
+                  "name": "Digital Literacy",
+                  "units": 4,
+                  "options": ["CS1101S"]
+                },
+                {
+                  "name": "Cultures and Connections",
+                  "units": 4,
+                  "options": ["GEC%"]
+                },
+                {
+                  "name": "Data Literacy",
+                  "units": 4,
+                  "options": ["GEA1000", "BT1101", "ST1131", "DSA1101"]
+                },
+                {
+                  "name": "Singapore Studies",
+                  "units": 4,
+                  "options": ["GES%"]
+                },
+                {
+                  "name": "Communities and Engagement",
+                  "units": 4,
+                  "options": ["GEN%"]
+                }
+              ]
+            },
+            {
+              "name": "Computing Ethics",
+              "units": 4,
+              "requirements": [
+                {
+                  "name": "Digital and AI Ethics",
+                  "units": 4,
+                  "options": ["IS1108"]
+                }
+              ]
+            },
+            {
+              "name": "Interdisciplinary & Cross-Disciplinary",
+              "units": 12,
+              "requirements": [
+                {
+                  "name": "Interdisciplinary Courses",
+                  "units": 8,
+                  "options": []
+                },
+                {
+                  "name": "Cross-Disciplinary Courses",
+                  "units": 4,
+                  "options": []
+                }
+              ]
+            }
+          ]
+        },
+        "core": {
+          "units": 80,
+          "categories": [
+            {
+              "name": "Computer Science Foundations",
+              "units": 20,
+              "options": [
+                "CS2030S",
+                "CS2040S",
+                "CS2100",
+                "CS2101",
+                "CS3230"
+              ]
+            },
+            {
+              "name": "Artificial Intelligence Foundations",
+              "units": 20,
+              "requirements": [
+                {
+                  "name": "Core AI Modules",
+                  "units": 16,
+                  "options": [
+                    "CS2109S",
+                    "CS3263",
+                    "CS3264",
+                    "CS3268"
+                  ]
+                },
+                {
+                  "name": "Perception",
+                  "units": 4,
+                  "options": [
+                    "CS4243",
+                    "CS4248"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Artificial Intelligence Breadth and Depth",
+              "units": 20,
+              "requirements": [
+                {
+                  "name": "Technical Electives",
+                  "units": 8,
+                  "options": [
+                    "CS4220",
+                    "CS4225",
+                    "CS4240",
+                    "CS4244",
+                    "CS4246",
+                    "CS4261",
+                    "CS4262",
+                    "CS4347",
+                    "CS4277",
+                    "CS4278"
+                  ]
+                },
+                {
+                  "name": "Industry Experience",
+                  "units": 6,
+                  "options": [
+                    "CP3880",
+                    "IS4010",
+                    "ETP3201L",
+                    "CP3200",
+                    "CP3202",
+                    "CP3107",
+                    "CP3110",
+                    "ETP3205"
+                  ]
+                },
+                {
+                  "name": "Dissertation Option",
+                  "units": 6,
+                  "options": ["CP4101"]
+                }
+              ]
+            },
+            {
+              "name": "Mathematics Foundations",
+              "units": 20,
+              "options": [
+                "CS1231S",
+                "CS2251",
+                "MA1521",
+                "MA1522",
+                "ST2334"
+              ]
+            }
+          ]
+        },
+        "unrestrictedElectives": {
+          "units": 40
+        }
+      },
+      "notes": [
+        "Students without A-level or H2 Mathematics must take MA1301/X or equivalent",
+        "At least 80% of programme requirements must be level 1000-4000 modules",
+        "Each module is 4 units unless otherwise stated",
+        "At least two Interdisciplinary courses required",
+        "At most one Cross-Disciplinary course",
+        "Perception: Choose exactly one course",
+        "Industry Experience: Other industry experience may be approved by the Department, certain NOC internships may count as CP-coded equivalents",
+        "CP4101 Dissertation Option: GPA >= 4.00 required, completed at least 112 units (70%) required, mandatory for Honours (Highest Distinction), project selection occurs one semester in advance, replaces Industry Experience if taken",
+        "If ST2334 is precluded, ST2132 must be taken instead"
+      ]
+    },
+    {
+      "degree": "Bachelor of Computing",
+      "faculty": "Computing",
+      "major": "Information Security",
+      "units": 160,
+      "course": {
+        "commonCore": {
+          "units": 40,
+          "categories": [
+            {
+              "name": "University Level Requirements",
+              "units": 24,
+              "requirements": [
+                {
+                  "name": "Digital Literacy",
+                  "units": 4,
+                  "options": ["CS1010"]
+                },
+                {
+                  "name": "Critique and Expression",
+                  "units": 4,
+                  "options": ["GEX%"]
+                },
+                {
+                  "name": "Cultures and Connections",
+                  "units": 4,
+                  "options": ["GEC%"]
+                },
+                {
+                  "name": "Data Literacy",
+                  "units": 4,
+                  "options": ["GEA1000", "BT1101", "ST1131", "DSE1101"]
+                },
+                {
+                  "name": "Singapore Studies",
+                  "units": 4,
+                  "options": ["GES%"]
+                },
+                {
+                  "name": "Communities and Engagement",
+                  "units": 4,
+                  "options": ["GEN%"]
+                }
+              ]
+            },
+            {
+              "name": "Computing Ethics",
+              "units": 4,
+              "requirements": [
+                {
+                  "name": "Digital Ethics and Data Privacy",
+                  "units": 4,
+                  "options": ["IS1108"]
+                }
+              ]
+            },
+            {
+              "name": "Interdisciplinary & Cross-Disciplinary",
+              "units": 12,
+              "requirements": [
+                {
+                  "name": "Interdisciplinary Courses",
+                  "units": 8,
+                  "options": []
+                },
+                {
+                  "name": "Cross-Disciplinary Courses",
+                  "units": 4,
+                  "options": []
+                }
+              ]
+            }
+          ]
+        },
+        "core": {
+          "units": 84,
+          "categories": [
+            {
+              "name": "Computing Foundation",
+              "units": 32,
+              "options": [
+                "CS1231S",
+                "CS2030",
+                "CS2040C",
+                "CS2100",
+                "CS2101",
+                "CS2103T",
+                "CS2105",
+                "CS2106"
+              ]
+            },
+            {
+              "name": "Information Security Requirements",
+              "units": 28,
+              "requirements": [
+                {
+                  "name": "Core Information Security",
+                  "units": 12,
+                  "options": [
+                    "CS2107",
+                    "CS3235",
+                    "IS4231"
+                  ]
+                },
+                {
+                  "name": "Capstone Requirement",
+                  "units": 8,
+                  "options": [
+                    "IFS4205",
+                    "CS4238",
+                    "IFS4103"
+                  ]
+                },
+                {
+                  "name": "Information Security Electives",
+                  "units": 8,
+                  "options": [
+                    "CS4230",
+                    "CS4236",
+                    "MA4261",
+                    "CS4238",
+                    "CS4239",
+                    "CS4257",
+                    "CS4276",
+                    "CS5231",
+                    "CS5321",
+                    "CS5322",
+                    "CS5331",
+                    "CS5332",
+                    "IFS4101",
+                    "IFS4102",
+                    "IFS4103",
+                    "IS4204",
+                    "IS4233",
+                    "IS4234",
+                    "IS4238",
+                    "IS4302"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Computing Requirements",
+              "units": 12,
+              "options": []
+            },
+            {
+              "name": "Mathematics",
+              "units": 12,
+              "options": [
+                "MA1521",
+                "MA1522",
+                "ST2334"
+              ]
+            }
+          ]
+        },
+        "unrestrictedElectives": {
+          "units": 36
+        }
+      },
+      "notes": [
+        "At least 80% of programme requirements must be level 1000-4000 modules",
+        "Industry Experience must be fulfilled unless replaced by CP4101",
+        "All courses are 4 units unless otherwise stated",
+        "Total degree requirement is 160 units",
+        "At least two Interdisciplinary (ID) courses required",
+        "At most one Cross-Disciplinary (CD) course",
+        "Capstone Requirement: Choose either IFS4205 OR both CS4238 and IFS4103",
+        "Information Security Electives: Complete exactly 8 units, CS4236 and MA4261 are mutually exclusive, other level-4000 or above courses may be approved by the School of Computing UG Office",
+        "Computing Requirements: Courses must be CS-coded, IS-coded, or CP-coded, CS-coded and IS-coded courses must be level-3000 or above, at least 6 units must be industrial experience courses"
+      ]
+    },
+    {
+      "degree": "Bachelor of Computing",
+      "faculty": "Computing",
+      "major": "Business Artificial Intelligence Systems",
+      "units": 160,
+      "course": {
+        "commonCore": {
+          "units": 40,
+          "categories": [
+            {
+              "name": "University Level Requirements",
+              "units": 24,
+              "requirements": [
+                {
+                  "name": "Digital Literacy",
+                  "units": 4,
+                  "options": ["CS1010A"]
+                },
+                {
+                  "name": "Critique and Expression",
+                  "units": 4,
+                  "options": ["GEX%"]
+                },
+                {
+                  "name": "Cultures and Connections",
+                  "units": 4,
+                  "options": ["GEC%"]
+                },
+                {
+                  "name": "Data Literacy",
+                  "units": 4,
+                  "options": ["BT1101"]
+                },
+                {
+                  "name": "Singapore Studies",
+                  "units": 4,
+                  "options": ["GES%"]
+                },
+                {
+                  "name": "Communities and Engagement",
+                  "units": 4,
+                  "options": ["GEN%"]
+                }
+              ]
+            },
+            {
+              "name": "Computing Ethics",
+              "units": 4,
+              "requirements": [
+                {
+                  "name": "Digital and AI Ethics",
+                  "units": 4,
+                  "options": ["IS1108"]
+                }
+              ]
+            },
+            {
+              "name": "Interdisciplinary & Cross-Disciplinary",
+              "units": 12,
+              "requirements": [
+                {
+                  "name": "Interdisciplinary Courses",
+                  "units": 8,
+                  "options": []
+                },
+                {
+                  "name": "Cross-Disciplinary Courses",
+                  "units": 4,
+                  "options": []
+                }
+              ]
+            }
+          ]
+        },
+        "core": {
+          "units": 80,
+          "categories": [
+            {
+              "name": "Core Courses",
+              "units": 60,
+              "options": [
+                "BT2102",
+                "CS2030",
+                "CS2040",
+                "IS2101",
+                "IS2108",
+                "IS2109",
+                "IS3103",
+                "IS4108",
+                "MA1521",
+                "MA1522",
+                "ST2334"
+              ]
+            },
+            {
+              "name": "Programme Electives",
+              "units": 20,
+              "categories": [
+                {
+                  "name": "Digital Business",
+                  "options": ["IS3150", "IS3240", "IS4262"]
+                },
+                {
+                  "name": "Financial Technology",
+                  "options": ["IS4226", "IS4228", "IS4302", "IS4303"]
+                },
+                {
+                  "name": "IT Solutioning",
+                  "options": [
+                    "CS2105",
+                    "IS2102",
+                    "IS3108",
+                    "IS3221",
+                    "IS4100",
+                    "IS4234",
+                    "IS4236",
+                    "IS4243",
+                    "IS4248",
+                    "IS4250",
+                    "IS4301"
+                  ]
+                },
+                {
+                  "name": "AI Solutioning",
+                  "options": [
+                    "BT3017",
+                    "BT4014",
+                    "BT4221",
+                    "BT4301",
+                    "IS3107",
+                    "IS3109",
+                    "IS4151",
+                    "IS4246",
+                    "IS4400",
+                    "IS4401",
+                    "IS4402"
+                  ]
+                },
+                {
+                  "name": "IT Business Innovation and Entrepreneurship",
+                  "options": [
+                    "CP3100",
+                    "IS3251",
+                    "IS4152",
+                    "IS4241",
+                    "IS4261"
+                  ]
+                },
+                {
+                  "name": "IT Security and Legal Aspects",
+                  "options": [
+                    "CS2107",
+                    "IFS4101",
+                    "IS4231",
+                    "IS4233",
+                    "IS4238"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "unrestrictedElectives": {
+          "units": 40
+        }
+      },
+      "notes": [
+        "At least 80% of programme requirements must be level 1000-4000 modules",
+        "Industry Experience must be fulfilled unless replaced by CP4101",
+        "All courses are 4 units unless otherwise stated",
+        "Total degree requirement is 160 units",
+        "At least two Interdisciplinary (ID) courses required",
+        "At most one Cross-Disciplinary (CD) course",
+        "Core Courses: 12 units for Industry Experience or CP4101 (if GPA >= 4.00)",
+        "Programme Electives: Complete 5 courses (20 units), at least 3 courses must be level-4000 or above, all courses are 4 units each",
+        "Students with GPA >= 4.00 may replace Industry Experience with CP4101"
+      ]
+    }
+  ]
+}
+      

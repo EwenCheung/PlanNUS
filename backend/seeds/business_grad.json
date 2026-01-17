@@ -1,0 +1,652 @@
+{
+  "degree": "Bachelor of Business Administration",
+  "faculty": "Business",
+  "units": 160,
+  "course": {
+    "commonCore": {
+      "units": 52,
+      "categories": [
+        {
+          "name": "General Education Courses",
+          "units": 24,
+          "requirements": [
+            {
+              "name": "Cultures and Connections",
+              "units": 4,
+              "options": ["GEC%"]
+            },
+            {
+              "name": "Singapore Studies",
+              "units": 4,
+              "options": ["GES%"]
+            },
+            {
+              "name": "Critique and Expression",
+              "units": 4,
+              "options": ["ES2002"]
+            },
+            {
+              "name": "Data Literacy",
+              "units": 4,
+              "options": ["Any approved Data Literacy course"]
+            },
+            {
+              "name": "Digital Literacy",
+              "units": 4,
+              "options": ["DAO1704", "Other GEI-approved courses"],
+              "notes": ["DAO1704 counts towards BBA curriculum. If used for GEI, add 4 units UE"]
+            },
+            {
+              "name": "Communities and Engagement",
+              "units": 4,
+              "options": ["GEN%"]
+            }
+          ]
+        },
+        {
+          "name": "Business Environment Courses",
+          "units": 20,
+          "requirements": [
+            {
+              "name": "Business Environment",
+              "units": 20,
+              "options": [
+                "BSP1702",
+                "BSP1703",
+                "DAO1704",
+                "ES2002",
+                "RE1707",
+                "MNO2707"
+              ],
+              "notes": [
+                "RE1707 is 2 Units",
+                "MNO2707 is 2 Units"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Cross-Disciplinary Course",
+          "units": 8,
+          "requirements": [
+            {
+              "name": "Field Service Project",
+              "units": 8,
+              "options": ["BSP4XXX"],
+              "notes": ["Level 4000 consulting practicum"]
+            }
+          ]
+        }
+      ]
+    },
+    "core": {
+      "units": 24,
+      "categories": [
+        {
+          "name": "Business Function Courses",
+          "units": 24,
+          "options": [
+            "ACC1701",
+            "MKT1705",
+            "MNO1706",
+            "DAO2702",
+            "DAO2703",
+            "FIN2704"
+          ]
+        }
+      ]
+    },
+    "major": {
+      "totalMajors": 1,
+      "options": [
+        {
+          "name": "Applied Business Analytics",
+          "code": "BZA",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 20,
+            "options": [
+              "DBA3702",
+              "DBA3803",
+              "IT3010",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 8,
+              "options": [
+                "DBA3701",
+                "DBA3711",
+                "DBA3712",
+                "DBA3713",
+                "DBA3751",
+                "DBA3761",
+                "ACC3715",
+                "DOS3811",
+                "MKT3811",
+                "IS3221"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "options": [
+                "DBA4711",
+                "DBA4712",
+                "DBA4713",
+                "DBA4714",
+                "DBA4715",
+                "DBA4751",
+                "DBA4761",
+                "DBA4761A",
+                "DBA4811",
+                "DBA4812",
+                "DBA4813",
+                "DBA4814",
+                "DOS4811",
+                "DOS4813",
+                "MKT4812",
+                "IE4214",
+                "IS4241",
+                "BT4212",
+                "BT4222"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Business Economics",
+          "code": "BEC",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 16,
+            "options": [
+              "BSE3702",
+              "BSE3703",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 12,
+              "options": [
+                "BSE3701",
+                "BSE3711",
+                "BSE3712",
+                "BSE3713",
+                "BSE3751",
+                "BSE3761",
+                "BSE3761A",
+                "MKT3812",
+                "DBA3702",
+                "DBA3803",
+                "EC3322",
+                "EC3332",
+                "EC3373",
+                "EC3375",
+                "EC3378",
+                "EC3394",
+                "EC3396"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "BSE4711",
+                "BSE4712",
+                "BSE4751",
+                "BSE4761",
+                "BSN4811",
+                "BSN4811A",
+                "DBA4811",
+                "DOS4811",
+                "DOS4812",
+                "MKT4811",
+                "RE4808"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Finance",
+          "code": "FIN",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 20,
+            "options": [
+              "FIN3701",
+              "FIN3702",
+              "FIN3703",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "ACC3717",
+                "FIN3711",
+                "FIN3712",
+                "FIN3713",
+                "FIN3714",
+                "FIN3715",
+                "FIN3716",
+                "FIN3717",
+                "FIN3718",
+                "FIN3719",
+                "FIN3720",
+                "FIN3721",
+                "FIN3722",
+                "FIN3751",
+                "FIN3761",
+                "FIN3761A",
+                "FIN3761B",
+                "FIN3761C",
+                "FIN3761D",
+                "RE3905"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "FIN4711",
+                "FIN4713",
+                "FIN4714",
+                "FIN4715",
+                "FIN4716",
+                "FIN4717",
+                "FIN4718",
+                "FIN4719",
+                "FIN4720",
+                "FIN4721",
+                "FIN4722",
+                "FIN4723",
+                "FIN4724",
+                "FIN4751",
+                "FIN4761",
+                "FIN4761A",
+                "FIN4761B",
+                "FIN4761C",
+                "FIN4761D"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Innovation and Entrepreneurship",
+          "code": "INE",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 16,
+            "options": [
+              "BSN3701",
+              "BSN3702",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 12,
+              "selectionRule": "Choose 3 courses",
+              "options": [
+                "BSN3703",
+                "BSN3711",
+                "BSN3712",
+                "BSN3713",
+                "BSN3714",
+                "BSN3715",
+                "BSN3716",
+                "BSN3717",
+                "BSN3718",
+                "BSN3751",
+                "BSN3811",
+                "MNO3811"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "BSN4711",
+                "BSN4712",
+                "BSN4713",
+                "BSN4714",
+                "BSN4751",
+                "BSN4811",
+                "BSN4811A",
+                "MNO4861C"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Leadership and Human Capital Management",
+          "code": "LHCM",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 20,
+            "options": [
+              "MNO3701",
+              "MNO3702",
+              "MNO3703",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "MNO3713",
+                "MNO3714",
+                "MNO3715",
+                "MNO3716",
+                "MNO3751",
+                "MNO3761",
+                "MNO3761A",
+                "MNO3811",
+                "BSN3811"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "MNO4712",
+                "MNO4715",
+                "MNO4717",
+                "MNO4751",
+                "MNO4761",
+                "MNO4761A",
+                "MNO4861C"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Marketing",
+          "code": "MKT",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 16,
+            "options": [
+              "MKT3701",
+              "MKT3702",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 12,
+              "selectionRule": "Choose 3 courses",
+              "options": [
+                "MKT3711",
+                "MKT3714",
+                "MKT3715",
+                "MKT3716",
+                "MKT3717",
+                "MKT3718",
+                "MKT3720",
+                "MKT3722",
+                "MKT3761A",
+                "MKT3723",
+                "MKT3761D",
+                "MKT3724",
+                "MKT3751",
+                "MKT3761",
+                "MKT3761B",
+                "MKT3761C",
+                "MKT3761E",
+                "MKT3811",
+                "MKT3812"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "MKT4714",
+                "MKT4716",
+                "MKT4761E",
+                "MKT4719",
+                "MKT4761G",
+                "MKT4720",
+                "MKT4761B",
+                "MKT4721",
+                "MKT4761D",
+                "MKT4722",
+                "MKT4761H",
+                "MKT4761J",
+                "MKT4761K",
+                "MKT4723",
+                "MKT4751",
+                "MKT4761",
+                "MKT4761A",
+                "MKT4761C",
+                "MKT4761F",
+                "MKT4811",
+                "MKT4812"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Operations and Supply Chain Management",
+          "code": "OSCM",
+          "units": 60,
+          "restricted": false,
+          "coreModules": {
+            "units": 20,
+            "options": [
+              "DOS3701",
+              "DOS3703",
+              "DOS3704",
+              "MNO2705",
+              "BSP4701"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "DOS3702",
+                "DOS3712",
+                "DOS3713",
+                "DOS3714",
+                "DOS3751",
+                "DOS3761",
+                "DOS3811",
+                "DBA3701",
+                "DBA3711",
+                "DBA3712"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "DOS4711",
+                "DOS4712",
+                "DOS4714",
+                "DOS4715",
+                "DOS4716",
+                "DOS4751",
+                "DOS4761",
+                "DOS4811",
+                "DOS4812",
+                "DOS4813",
+                "DBA4761A",
+                "DBA4811",
+                "DBA4812",
+                "DBA4813",
+                "DBA4814",
+                "IE4214"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["BSP4701"]
+          },
+          "remainingUnits": 24
+        },
+        {
+          "name": "Accountancy",
+          "code": "ACC",
+          "units": 68,
+          "restricted": false,
+          "coreModules": {
+            "units": 48,
+            "options": [
+              "ACC2706",
+              "ACC2707",
+              "ACC2708",
+              "ACC2727",
+              "ACC3702",
+              "ACC3703",
+              "ACC3706",
+              "ACC3727",
+              "ACC4701",
+              "ACC4702",
+              "ACC4703",
+              "MNO2705"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 0,
+              "selectionRule": "No required electives",
+              "options": []
+            },
+            "level4000": {
+              "units": 0,
+              "selectionRule": "No required electives",
+              "options": []
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["ACC4701"]
+          },
+          "remainingUnits": 16,
+          "notes": [
+            "Accountancy electives available: ACC2711, ACC2712, ACC3711, ACC3713, ACC3714, ACC3715, ACC3717, ACC4711, ACC4712, ACC4713, ACC4715, ACC4751, ACC4761, ACC4761A",
+            "These electives count as Unrestricted Electives only"
+          ]
+        },
+        {
+          "name": "Real Estate",
+          "code": "RE",
+          "units": 64,
+          "restricted": false,
+          "coreModules": {
+            "units": 28,
+            "options": [
+              "RE2702",
+              "RE2705",
+              "RE3701",
+              "RE3705",
+              "RE3706",
+              "RE4701",
+              "MNO2705"
+            ]
+          },
+          "electiveModules": {
+            "level3000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "RE3703",
+                "RE3808",
+                "RE3809",
+                "RE3810",
+                "RE3811"
+              ]
+            },
+            "level4000": {
+              "units": 8,
+              "selectionRule": "Choose 2 courses",
+              "options": [
+                "RE4803",
+                "RE4808",
+                "RE4809",
+                "RE4810",
+                "RE4811"
+              ]
+            }
+          },
+          "capstone": {
+            "units": 4,
+            "required": true,
+            "options": ["RE4701"]
+          },
+          "remainingUnits": 16
+        }
+      ]
+    },
+    "unrestrictedElectives": {
+      "units": 48,
+      "notes": [
+        "48 units for most majors",
+        "40 units for Accountancy major",
+        "44 units for Real Estate major",
+        "Maximum 60 units of level-1000 courses allowed",
+        "Polytechnic graduates: 20 units of advanced placement credits not counted against 60 unit limit"
+      ]
+    }
+  }
+}
