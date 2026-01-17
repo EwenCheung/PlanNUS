@@ -37,65 +37,92 @@ def get_needed_courses(degree: str, major: str, focus_area: str = "AI") -> List[
         List of Course objects required for graduation
     """
     courses = []
-    
-    # ============== COMMON CURRICULUM (CC) ==============
-    # University Pillars
-    courses.append(Course("CS1101S", "Programming Methodology", 4, "CC-UP", [], [], ["CS1101", "CS1010"]))
-    courses.append(Course("ES2660", "Communicating in the Information Age", 4, "CC-UP", [], [], [], True, fluff=True))
-    courses.append(Course("GEA1000", "Quantitative Reasoning with Data", 4, "CC-UP", [], [], ["ST1131", "BT1101", "DSA1101"], True, fluff=True))
-    courses.append(Course("GES", "Singapore Studies", 4, "CC-UP", [], [], [], True, fluff=True))  # Placeholder
-    courses.append(Course("GEC", "Cultures and Connections", 4, "CC-UP", [], [], [], True, fluff=True))  # Placeholder
-    courses.append(Course("GEN", "Communities and Engagement", 4, "CC-UP", [], [], [], True, fluff=True))  # Placeholder
-    
-    # Computing Ethics
-    courses.append(Course("IS1108", "Digital Ethics and Data Privacy", 4, "CC-CE", [], [], [], True, fluff=True))
-    
-    # Interdisciplinary (2 courses)
-    courses.append(Course("ID-1", "Interdisciplinary Course 1", 4, "CC-ID", [], [], [], True, fluff=True))
-    courses.append(Course("ID-2", "Interdisciplinary Course 2", 4, "CC-ID", [], [], [], True, fluff=True))
-    
-    # Cross-disciplinary (1 course)
-    courses.append(Course("CD", "Cross-disciplinary Course", 4, "CC-CD", [], [], [], True, fluff=True))
-    
-    # ============== CORE - MATHEMATICS & SCIENCE ==============
-    courses.append(Course("MA1521", "Calculus for Computing", 4, "Core-MS", [], [], ["MA2002"]))
-    courses.append(Course("MA1522", "Linear Algebra for Computing", 4, "Core-MS", [], [], ["MA2001"]))
-    courses.append(Course("ST2334", "Probability and Statistics", 4, "Core-MS", ["MA1521"], [], []))
-    
-    # ============== CORE - COMPUTER SCIENCE ==============
-    courses.append(Course("CS1231S", "Discrete Structures", 4, "Core-CS", [], [], ["CS1231"]))
-    courses.append(Course("CS2030S", "Programming Methodology II", 4, "Core-CS", ["CS1101S"], [], ["CS2030"]))
-    courses.append(Course("CS2040S", "Data Structures and Algorithms", 4, "Core-CS", ["CS1101S", "CS1231S"], [], ["CS2040"]))
-    courses.append(Course("CS2100", "Computer Organisation", 4, "Core-CS", ["CS1101S"], [], []))
-    courses.append(Course("CS2101", "Effective Communication for Computing Professionals", 4, "Core-CS", [], ["CS2103T"], []))
-    courses.append(Course("CS2103T", "Software Engineering", 4, "Core-CS", ["CS2030S", "CS2040S"], ["CS2101"], []))
-    courses.append(Course("CS2106", "Introduction to Operating Systems", 4, "Core-CS", ["CS2100"], [], []))
-    courses.append(Course("CS2109S", "Introduction to AI and Machine Learning", 4, "Core-CS", ["CS2040S", "CS1231S", "MA1521"], [], []))
-    courses.append(Course("CS3230", "Design and Analysis of Algorithms", 4, "Core-CS", ["CS2040S", "CS1231S"], [], []))
-    
-    # ============== FOCUS AREA COURSES ==============
-    if focus_area == "AI":
-        # Primary Focus (must take)
-        courses.append(Course("CS3243", "Introduction to Artificial Intelligence", 4, f"Focus in AI-P", ["CS2040S", "CS1231S"], [], []))
-        courses.append(Course("CS3244", "Machine Learning", 4, f"Focus in AI-P", ["CS2040S", "MA1521", "MA1522", "ST2334"], [], []))
-        # Elective Focus (choose from these)
-        courses.append(Course("CS4243", "Computer Vision and Pattern Recognition", 4, f"Focus in AI-E", ["CS2040S", "MA1521", "MA1522"], [], []))
-        courses.append(Course("CS4248", "Natural Language Processing", 4, f"Focus in AI-E", ["CS3243"], [], []))
-        courses.append(Course("CS4269", "Fundamentals of Logic in CS", 4, f"Focus in AI-E", ["CS1231S"], [], []))
-    elif focus_area == "SoftwareEngineering":
-        courses.append(Course("CS3203", "Software Engineering Project", 8, f"Focus in SE-P", ["CS2103T"], [], []))
-        courses.append(Course("CS3219", "Software Engineering Principles and Patterns", 4, f"Focus in SE-P", ["CS2103T"], [], []))
-        courses.append(Course("CS4211", "Formal Methods for Software Engineering", 4, f"Focus in SE-E", ["CS2103T", "CS1231S"], [], []))
-    elif focus_area == "Algorithms":
-        courses.append(Course("CS3231", "Theory of Computation", 4, f"Focus in Algo-P", ["CS1231S", "CS2040S"], [], []))
-        courses.append(Course("CS4231", "Parallel and Distributed Algorithms", 4, f"Focus in Algo-P", ["CS3230"], [], []))
-        courses.append(Course("CS4232", "Theory of Computation", 4, f"Focus in Algo-E", ["CS3231"], [], []))
-    
-    # ============== UNRESTRICTED ELECTIVES ==============
-    # Add placeholder UEs (students will fill with their own choices)
-    for i in range(1, 6):
-        courses.append(Course(f"UE-{i}", "Unrestricted Elective", 4, "UE", [], [], [], True, fluff=True))
-    
+    if major == "Computer Science"
+        # ============== COMMON CURRICULUM (CC) ==============
+        # University Pillars
+        courses.append(Course("CS1101S", "Programming Methodology", 4, "CC-UP", [], [], ["CS1101", "CS1010"]))
+        courses.append(Course("ES2660", "Communicating in the Information Age", 4, "CC-UP", [], [], [], fluff=True))
+        courses.append(Course("GEA1000", "Quantitative Reasoning with Data", 4, "CC-UP", [], [], ["ST1131", "BT1101", "DSA1101"], fluff=True))
+        courses.append(Course("GES", "Singapore Studies", 4, "CC-UP", [], [], [], fluff=True))  # Placeholder
+        courses.append(Course("GEC", "Cultures and Connections", 4, "CC-UP", [], [], [], fluff=True))  # Placeholder
+        courses.append(Course("GEN", "Communities and Engagement", 4, "CC-UP", [], [], [], fluff=True))  # Placeholder
+        
+        # Computing Ethics
+        courses.append(Course("IS1108", "Digital Ethics and Data Privacy", 4, "CC-CE", [], [], [], fluff=True))
+        
+        # Interdisciplinary (2 courses)
+        courses.append(Course("ID-1", "Interdisciplinary Course 1", 4, "CC-ID", [], [], [], fluff=True))
+        courses.append(Course("ID-2", "Interdisciplinary Course 2", 4, "CC-ID", [], [], [], fluff=True))
+        
+        # Cross-disciplinary (1 course)
+        courses.append(Course("CD", "Cross-disciplinary Course", 4, "CC-CD", [], [], [], fluff=True))
+        
+        # ============== CORE - MATHEMATICS & SCIENCE ==============
+        courses.append(Course("MA1521", "Calculus for Computing", 4, "Core-MS", [], [], ["MA2002"]))
+        courses.append(Course("MA1522", "Linear Algebra for Computing", 4, "Core-MS", [], [], ["MA2001"]))
+        courses.append(Course("ST2334", "Probability and Statistics", 4, "Core-MS", ["MA1521"], [], []))
+        
+        # ============== CORE - COMPUTER SCIENCE ==============
+        courses.append(Course("CS1231S", "Discrete Structures", 4, "Core-CS", [], [], ["CS1231"]))
+        courses.append(Course("CS2030S", "Programming Methodology II", 4, "Core-CS", ["CS1101S"], [], ["CS2030"]))
+        courses.append(Course("CS2040S", "Data Structures and Algorithms", 4, "Core-CS", ["CS1101S", "CS1231S"], [], ["CS2040"]))
+        courses.append(Course("CS2100", "Computer Organisation", 4, "Core-CS", ["CS1101S"], [], []))
+        courses.append(Course("CS2103T", "Software Engineering", 4, "Core-CS", ["CS2030S", "CS2040S"], ["CS2101"], []))
+        courses.append(Course("CS2106", "Introduction to Operating Systems", 4, "Core-CS", ["CS2100"], [], []))
+        courses.append(Course("CS2109S", "Introduction to AI and Machine Learning", 4, "Core-CS", ["CS2040S", "CS1231S", "MA1521"], [], []))
+        courses.append(Course("CS3230", "Design and Analysis of Algorithms", 4, "Core-CS", ["CS2040S", "CS1231S"], [], []))
+        
+        # ============== FOCUS AREA COURSES ==============
+        for i in range(1, 4):
+            courses.append(Course(f"Focus-{focus_area}-{i}", "Focus Area", 4, f"Focus in {focus_area}", ["CS2030S", "CS2040S", "CS2103T"], [], []))
+        
+        # ============== 4K Modules ==============
+        courses.append(Course("4K Module-1","Level 4000+ Module",4,"Core-BD-L4K",["CS2030S", "CS2040S", "CS2103T"],[],[],fluff=True))
+        courses.append(Course("4K Module-2","Level 4000+ Module",4,"Core-BD-L4K",["CS2030S", "CS2040S", "CS2103T"],[],[],fluff=True))
+        courses.append(Course("4K Module-3","Level 4000+ Module",4,"Core-BD-L4K",["CS2030S", "CS2040S", "CS2103T"],[],[],fluff=True))
+
+        # ============== UNRESTRICTED ELECTIVES ==============
+        # Add placeholder UEs (students will fill with their own choices)
+        for i in range(1, 6):
+            courses.append(Course(f"UE-{i}", "Unrestricted Elective", 4, "UE", [], [], [], fluff=True))
+
+    elif major == "Business Analytics":
+        # ============== COMMON CORE (per your JSON) ==============
+        courses.append(Course("CS1010A", "Programming Methodology", 4, "CC-UP", [], [], ["CS1101S", "CS1101", "CS1010"]))
+        courses.append(Course("GEX", "Critique and Expression (choose any GEX%)", 4, "CC-UP", [], [], [], fluff=True))
+        courses.append(Course("GEC", "Cultures and Connections (choose any GEC%)", 4, "CC-UP", [], [], [], fluff=True))
+        courses.append(Course("BT1101", "Introduction to Business Analytics", 4, "CC-UP", [], [], [], fluff=True))
+        courses.append(Course("GES", "Singapore Studies (choose any GES%)", 4, "CC-UP", [], [], [], fluff=True))
+        courses.append(Course("GEN", "Communities and Engagement (choose any GEN%)", 4, "CC-UP", [], [], [], fluff=True))
+
+        courses.append(Course("IS1108", "Digital Ethics and Data Privacy", 4, "CC-CE", [], [], [], fluff=True))
+
+        courses.append(Course("ID-1", "Interdisciplinary Course 1", 4, "CC-ID", [], [], [], fluff=True))
+        courses.append(Course("ID-2", "Interdisciplinary Course 2", 4, "CC-ID", [], [], [], fluff=True))
+        courses.append(Course("CD-1", "Cross-disciplinary Course", 4, "CC-CD", [], [], [], fluff=True))
+
+        # ============== AI CORE COURSES (60 units) ==============
+        # (No prereqs provided in your JSON => keep prereqs empty)
+        courses.append(Course("IS2101", "Business and Technical Communication", 4, "Core-CS", [], [], []))
+        courses.append(Course("BT2102", "Data Management and Visualisation", 4, "Core-CS", ["BT1101", "CS1010A"], [], []))
+        courses.append(Course("MA1521", "Calculus for Computing", 4, "Core-MS", [], [], ["MA2002"]))
+        courses.append(Course("MA1522", "Linear Algebra for Computing", 4, "Core-MS", [], [], ["MA2001"]))
+        courses.append(Course("BT2101", "Econometrics Modeling for Business Analytics", 4, "Core-MS", ["MA1521", "BT1101"], [], ["MA2002"]))
+        courses.append(Course("ST2334", "Probability and Statistics", 4, "Core-MS", ["MA1521"], [], []))
+        courses.append(Course("CS2030S", "Programming Methodology II", 4, "Core-CS", ["CS1101S"], [], ["CS2030S"]))
+        courses.append(Course("CS2040S", "Data Structures and Algorithms", 4, "Core-CS", ["CS1101S", "CS1231S"], [], ["CS2040S"]))
+        
+        # ============== PROGRAMME ELECTIVES (20 units => 5 modules placeholders) ==============
+        # You provided 3 elective baskets; we add 5 generic elective placeholders with the basket options in the title.
+        courses.append(Course("AI-ELE-BIZ-1", "Programme Elective (Business Applications)", 4, "AI-Elective", [], [], [], fluff=True))
+        courses.append(Course("AI-ELE-BIZ-2", "Programme Elective (Business Applications)", 4, "AI-Elective", [], [], [], fluff=True))
+        courses.append(Course("AI-ELE-MTH-1", "Programme Elective (Analytics Methods)", 4, "AI-Elective", [], [], [], fluff=True))
+        courses.append(Course("AI-ELE-MTH-2", "Programme Elective (Analytics Methods)", 4, "AI-Elective", [], [], [], fluff=True))
+        courses.append(Course("AI-ELE-TECH-1", "Programme Elective (Technology Implementation)", 4, "AI-Elective", [], [], [], fluff=True))
+
+        # ============== UNRESTRICTED ELECTIVES (40 units => 10 modules placeholders) ==============
+        for i in range(1, 11):
+            courses.append(Course(f"UE-{i}", "Unrestricted Elective", 4, "UE", [], [], [], fluff=True))
     return courses
 
 
