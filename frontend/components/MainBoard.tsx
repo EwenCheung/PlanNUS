@@ -221,14 +221,14 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
               name: 'Semester 1',
               units: sem1Units,
               modules: sem1Modules,
-              isExchange: false
+              isExchange: sem1Key === plan.sep_semester
             },
             {
               id: yearNum * 10 + 2,
               name: 'Semester 2',
               units: sem2Units,
               modules: sem2Modules,
-              isExchange: false
+              isExchange: sem2Key === plan.sep_semester
             }
           ]
         };
@@ -1282,11 +1282,13 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                     const isFutureSemester = semOrder > currentOrder;
 
                     // Determine semester background class
-                    const semBgClass = isPastSemester
-                      ? 'bg-green-50/70 ring-2 ring-green-300 border-2 border-green-200'
-                      : isCurrentSemester
-                        ? 'bg-blue-50/70 ring-2 ring-blue-300 border-2 border-blue-200'
-                        : 'border-2 border-slate-200';
+                    const semBgClass = sem.isExchange
+                      ? 'bg-orange-50/70 ring-2 ring-orange-300 border-2 border-orange-200'
+                      : isPastSemester
+                        ? 'bg-green-50/70 ring-2 ring-green-300 border-2 border-green-200'
+                        : isCurrentSemester
+                          ? 'bg-blue-50/70 ring-2 ring-blue-300 border-2 border-blue-200'
+                          : 'border-2 border-slate-200';
 
                     return (
                       <div
@@ -1307,7 +1309,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                         <div className="flex justify-between items-center px-1">
                           <div className="flex items-center gap-2">
                             <span className={`text-base font-bold ${isDragTarget ? 'text-primary' : isPastSemester ? 'text-green-700' : isCurrentSemester ? 'text-blue-700' : (sem.isExchange ? 'text-orange-600 uppercase tracking-wider' : (sem.name.includes('Special') ? 'text-amber-600' : 'text-slate-700'))}`}>
-                              {sem.name}
+                              {sem.isExchange ? `SEP - ${sem.name}` : sem.name}
                             </span>
                             {isPastSemester && !sem.isExchange && !sem.name.includes('Special') && (
                               <span className="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full uppercase">Completed</span>
@@ -1316,7 +1318,10 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                               <span className="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full uppercase">Current</span>
                             )}
                             {sem.isExchange && (
-                              <span className="material-symbols-outlined text-orange-400 text-[20px]">flight_takeoff</span>
+                              <>
+                                <span className="text-[10px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full uppercase">SEP</span>
+                                <span className="material-symbols-outlined text-orange-400 text-[20px]">flight_takeoff</span>
+                              </>
                             )}
                             {sem.name.includes('Special') && (
                               <span className="material-symbols-outlined text-amber-400 text-[18px]">sunny</span>
@@ -1340,7 +1345,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                         <div className="space-y-2 relative">
 
                           {/* Existing Modules with Drop Indicators */}
-                          {sem.modules.map((mod, modIndex) => {
+                          {sem.modules.filter(mod => mod.code !== 'SEP-PLACEHOLDER').map((mod, modIndex) => {
                             const hasPrereqViolation = prereqViolations.has(mod.code);
                             const missingPrereqs = prereqViolations.get(mod.code) || [];
 
@@ -1364,7 +1369,9 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                                 ? 'border-green-400 hover:border-green-500 hover:shadow-md'
                                 : isCurrentSemester
                                   ? 'border-blue-400 hover:border-blue-500 hover:shadow-md'
-                                  : 'border-amber-400 hover:border-amber-500 hover:shadow-md';
+                                  : sem.isExchange
+                                    ? 'border-orange-400 hover:border-orange-500 hover:shadow-md'
+                                    : 'border-amber-400 hover:border-amber-500 hover:shadow-md';
 
                             return (
                               <div key={mod.code}>
@@ -1467,16 +1474,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                             </div>
                           )}
 
-                          {/* Bottom Element Logic */}
-                          {sem.isExchange ? (
-                            <div className="h-32 bg-white/60 border-2 border-dashed border-orange-200 rounded-lg flex flex-col items-center justify-center gap-2 text-center p-4">
-                              <span className="material-symbols-outlined text-orange-400 text-[32px]">public</span>
-                              <div>
-                                <p className="text-xs font-bold text-orange-600">Exchange Semester</p>
-                                <p className="text-[10px] font-medium text-slate-500 leading-tight mt-1">Modules mapped via EduRec</p>
-                              </div>
-                            </div>
-                          ) : isSearching ? (() => {
+                          {isSearching ? (() => {
                             // Calculate semester info for API call
                             const semNum = sem.name.includes('1') ? 1 : (sem.name.includes('2') ? 2 : 1);
                             const acadYear = year.academicYear?.replace('/', '-') || '2025-2026';
@@ -1586,6 +1584,19 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                               <span className="material-symbols-outlined text-[22px] group-hover:scale-110 transition-transform">add_circle</span>
                               <span className="text-xs font-medium">Add Modules</span>
                             </button>
+                          )}
+
+                          {/* SEP Information Bar */}
+                          {sem.isExchange && (
+                            <div className="mt-2 bg-orange-50 border border-orange-200 rounded-lg p-3 flex items-start gap-3">
+                              <span className="material-symbols-outlined text-orange-500 text-[20px] shrink-0 mt-0.5">smart_toy</span>
+                              <div>
+                                <p className="text-xs font-bold text-orange-800">AI Assistant Available</p>
+                                <p className="text-[10px] text-orange-700 leading-relaxed mt-1">
+                                  Please use AI Assistant to help you with your SEP planning. AI Assistant can let you know what course can be mapped in that school.
+                                </p>
+                              </div>
+                            </div>
                           )}
                         </div>
                       </div>

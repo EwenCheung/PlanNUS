@@ -573,6 +573,7 @@ def generate_study_plan(
         "focus_area": focus_area,
         "max_mcs_per_semester": max_mcs,
         "total_mcs": total_mcs,
+        "sep_semester": sep_semester,
         "plan": semester_plan,
         "exempted": exempted_codes,
         "courses": {

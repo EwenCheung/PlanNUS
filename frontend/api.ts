@@ -82,6 +82,7 @@ export interface GeneratePlanResponse {
         focus_area: string;
         max_mcs_per_semester: number;
         total_mcs: number;
+        sep_semester?: string;
         plan: Record<string, string[]>;  // y1s1: ["CS1101S", ...], etc.
         exempted?: string[];
         courses: Record<string, { title: string; credit: number; type: string; fluff?: boolean }>;

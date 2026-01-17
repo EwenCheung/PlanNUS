@@ -227,6 +227,39 @@ class CoursePlanningAgent:
         except Exception as e:
             return {"error": str(e)}
     
+    def get_university_mappings(self, university: str, faculty: str = None) -> Dict:
+        """
+        Get all known module mappings for a specific partner university.
+        """
+        try:
+            query = self.supabase.table("exchange_modules").select(
+                "nus_course, pu_course, pu_course_title, faculty, preapproved"
+            ).ilike("partner_univ", f"%{university}%")
+            
+            if faculty:
+                query = query.ilike("faculty", f"%{faculty}%")
+            
+            result = query.limit(50).execute()
+            
+            if not result.data:
+                return {
+                    "university": university,
+                    "mappings": [],
+                    "message": f"No mappings found for {university}"
+                }
+                
+            # Sort: CS modules first, then others
+            mappings = result.data
+            mappings.sort(key=lambda x: (not x["nus_course"].startswith("CS"), x["nus_course"]))
+            
+            return {
+                "university": university,
+                "mappings": mappings,
+                "count": len(mappings)
+            }
+        except Exception as e:
+            return {"error": str(e)}
+
     def recommend_exchange_university(self, remaining_courses: list, faculty: str = None) -> Dict:
         """
         Recommend partner universities based on remaining courses in the study plan.
@@ -274,10 +307,13 @@ class CoursePlanningAgent:
             # Convert to list and sort
             recommendations = []
             for uni_data in uni_matches.values():
+                # Sort courses: CS first
+                sorted_courses = sorted(list(uni_data["matching_courses"]), key=lambda x: (not x.startswith("CS"), x))
+                
                 recommendations.append({
                     "name": uni_data["name"],
                     "faculty": uni_data["faculty"],
-                    "matching_courses": list(uni_data["matching_courses"]),
+                    "matching_courses": sorted_courses,
                     "match_count": len(uni_data["matching_courses"]),
                     "preapproved_count": uni_data["preapproved_count"]
                 })
@@ -306,12 +342,14 @@ Available tables:
 3. reviews (id SERIAL PK, module_code TEXT FK, rating INT, comment TEXT, timestamp TIMESTAMP)
 4. degree_requirements (id SERIAL PK, degree TEXT, major TEXT, courses JSONB, notes TEXT, total_units INT)
 5. plans (id UUID PK, user_id UUID FK, name TEXT, data JSONB, created_at TIMESTAMP)
+6. exchange_modules (id SERIAL PK, partner_univ TEXT, faculty TEXT, nus_course TEXT, pu_course TEXT, pu_course_title TEXT, preapproved BOOLEAN)
 
 Important columns:
 - modules.attributes contains JSON with workload info
 - modules.sentiment_tags is an array of strings like ['heavy workload', 'great prof']
 - modules.review_summary is AI-generated summary of reviews
 - degree_requirements.courses contains structured JSON with core, focusArea, commonCore, unrestrictedElectives
+- exchange_modules: partner_univ (University Name), nus_course (NUS Module Code), pu_course (Partner Module Code)
 """
         
         try:
@@ -412,13 +450,19 @@ If the question cannot be answered with a safe SELECT query, respond with: UNSAF
                         .limit(20) \
                         .execute()
                     return {"success": True, "sql": sql_query, "results": res.data, "count": len(res.data), "formatted_table": self.format_results_as_table(res.data)}
+
+            if "exchange_modules" in sql_upper:
+                # Exchange modules query
+                # Basic support for unhandled SQL by just returning success=False but giving SQL
+                # The agent might try to use other tools if this fails
+                pass 
             
             # For complex queries, return error with helpful suggestions
             return {
                 "success": False,
                 "sql": sql_query, 
                 "error": "Could not execute this complex query directly.",
-                "suggestion": "Try using these tools instead: search_modules (for finding modules), get_degree_requirements (for graduation requirements), get_module_reviews (for reviews/ratings)",
+                "suggestion": "Try using these tools instead: search_modules, get_degree_requirements, get_university_mappings, or recommend_exchange_university",
                 "results": []
             }
             
@@ -478,6 +522,12 @@ You are Steve, a friendly academic advisor for NUS. Be CONCISE and HELPFUL.
 3. **Only answer what's asked** - Don't list all requirements unless specifically asked
 4. **Use simple formatting** - Bullet points > tables for short lists
 
+## SEP / Exchange Guidance
+- **What is SEP?**: Student Exchange Programme. Students spend a semester at a partner university.
+- **Mapping**: Finding a course at a partner university that is equivalent to an NUS module.
+- **Prioritize CS**: When recommending mappings or courses for SEP, **ALWAYS LIST COMPUTER SCIENCE (CS) MODULES FIRST**.
+- **Database**: You have access to `exchange_modules` table via tools.
+
 ## Degree Requirements Data Structure (from get_degree_requirements tool)
 When you call get_degree_requirements, the "courses" field contains JSON with:
 - **core**: Core modules (CS Foundation, Math & Sciences, Breadth & Depth)
@@ -501,7 +551,8 @@ When you call get_degree_requirements, the "courses" field contains JSON with:
 - Use `get_degree_requirements` when asked about fluff/core/ID/CD/focus areas/requirements
 - Use `search_modules` when asked to find specific topics or module codes
 - Use `get_module_reviews` when asked about workload/difficulty
-- Use `search_exchange_mappings` when asked about exchange/SEP course mappings for a specific module
+- Use `search_exchange_mappings` when asked about exchange/SEP course mappings for a specific module (e.g. "where can I map CS3230?")
+- Use `get_university_mappings` when asked about mappings at a SPECIFIC university (e.g. "what can I take at Waterloo?")
 - Use `get_partner_universities` when asked to list exchange partner universities
 - Use `recommend_exchange_university` when asked to find best exchange destinations based on remaining courses
 
@@ -641,6 +692,21 @@ When you call get_degree_requirements, the "courses" field contains JSON with:
             {
                 "type": "function",
                 "function": {
+                    "name": "get_university_mappings",
+                    "description": "Get all module mappings for a specific partner university. Useful for questions like 'what can I map at Waterloo?'.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "university": {"type": "string", "description": "Name of the partner university"},
+                            "faculty": {"type": "string", "description": "Optional faculty filter"}
+                        },
+                        "required": ["university"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
                     "name": "recommend_exchange_university",
                     "description": "Recommend the best exchange universities based on remaining courses in the student's plan. Returns universities sorted by number of matching course mappings.",
                     "parameters": {
@@ -700,6 +766,8 @@ When you call get_degree_requirements, the "courses" field contains JSON with:
                         result = self.get_partner_universities(args.get("faculty"))
                     elif func_name == "recommend_exchange_university":
                         result = self.recommend_exchange_university(args["remaining_courses"], args.get("faculty"))
+                    elif func_name == "get_university_mappings":
+                        result = self.get_university_mappings(args["university"], args.get("faculty"))
                     elif func_name == "validate_study_plan":
                          pass
                     
