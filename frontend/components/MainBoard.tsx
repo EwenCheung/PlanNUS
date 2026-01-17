@@ -242,6 +242,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragOverSemId, setDragOverSemId] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null); // Track position within semester
   const [addingModuleSemId, setAddingModuleSemId] = useState<number | null>(null);
 
   // Drag to scroll state
@@ -255,9 +256,54 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
   // Bottom panel state
   const [isBottomOpen, setIsBottomOpen] = useState(true);
   const [isBottomExpanded, setIsBottomExpanded] = useState(false);
+  const [bottomHeight, setBottomHeight] = useState(160); // Default h-40 = 160px
+
+  // Resize handler for bottom panel
+  const handleBottomResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startHeight = bottomHeight;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const delta = startY - moveEvent.clientY;
+      const newHeight = Math.min(Math.max(startHeight + delta, 100), 400); // Min 100px, Max 400px
+      setBottomHeight(newHeight);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
   // Progression Panel State
   const [isProgressionExpanded, setIsProgressionExpanded] = useState(false);
+  const [isProgressionOpen, setIsProgressionOpen] = useState(true);
+  const [progressionHeight, setProgressionHeight] = useState(280); // Default expanded height
+
+  // Resize handler for progression panel
+  const handleProgressionResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startHeight = progressionHeight;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const delta = moveEvent.clientY - startY;
+      const newHeight = Math.min(Math.max(startHeight + delta, 150), 450); // Min 150px, Max 450px
+      setProgressionHeight(newHeight);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
   // Staging Area State - Exempted courses only
   const [stagedModules, setStagedModules] = useState<StagedModule[]>([
@@ -534,11 +580,23 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
     setDraggingModule({ code: moduleCode, source, sourceId });
     e.dataTransfer.setData('text/plain', moduleCode);
     e.dataTransfer.effectAllowed = 'move';
+    
+    // Create a translucent drag image
+    const dragElement = e.currentTarget as HTMLElement;
+    const clone = dragElement.cloneNode(true) as HTMLElement;
+    clone.style.opacity = '0.7';
+    clone.style.position = 'absolute';
+    clone.style.top = '-1000px';
+    clone.style.transform = 'rotate(3deg)';
+    document.body.appendChild(clone);
+    e.dataTransfer.setDragImage(clone, 50, 30);
+    setTimeout(() => document.body.removeChild(clone), 0);
   };
 
   const handleDragEnd = () => {
     setIsDragging(false);
     setDragOverSemId(null);
+    setDragOverIndex(null);
     setDraggingModule(null);
   };
 
@@ -548,22 +606,56 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
     }
   };
 
+  const handleDragOverModule = (e: React.DragEvent, semId: number, index: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+    
+    // Determine if we should insert before or after this module
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const midpoint = rect.top + rect.height / 2;
+    const insertIndex = e.clientY < midpoint ? index : index + 1;
+    
+    setDragOverSemId(semId);
+    setDragOverIndex(insertIndex);
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = async (e: React.DragEvent, targetSemId: number) => {
+  const handleDrop = async (e: React.DragEvent, targetSemId: number, insertAtIndex?: number) => {
     e.preventDefault();
 
     if (!draggingModule) return;
 
     const { code, source, sourceId } = draggingModule;
 
-    // If dropping into the same semester, do nothing
+    // Handle reordering within the same semester
     if (source === 'semester' && sourceId === targetSemId) {
+      if (insertAtIndex !== undefined) {
+        setAcademicYears(prev => prev.map(year => ({
+          ...year,
+          semesters: year.semesters.map(sem => {
+            if (sem.id === targetSemId) {
+              const modules = [...sem.modules];
+              const currentIndex = modules.findIndex(m => m.code === code);
+              if (currentIndex !== -1 && currentIndex !== insertAtIndex) {
+                const [movedModule] = modules.splice(currentIndex, 1);
+                // Adjust index if we removed an item before the insert position
+                const adjustedIndex = currentIndex < insertAtIndex ? insertAtIndex - 1 : insertAtIndex;
+                modules.splice(adjustedIndex, 0, movedModule);
+                return { ...sem, modules };
+              }
+            }
+            return sem;
+          })
+        })));
+      }
       setIsDragging(false);
       setDragOverSemId(null);
+      setDragOverIndex(null);
       setDraggingModule(null);
       return;
     }
@@ -600,6 +692,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
         showToast(`${code} already exists in your study plan`, 'error');
         setIsDragging(false);
         setDragOverSemId(null);
+        setDragOverIndex(null);
         setDraggingModule(null);
         return;
       }
@@ -608,7 +701,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
       // Validation will happen in background via useEffect
     }
 
-    // Add module to target semester
+    // Add module to target semester at specified index
     setAcademicYears(prev => prev.map(year => ({
       ...year,
       semesters: year.semesters.map(sem => {
@@ -624,9 +717,16 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
         if (sem.id === targetSemId) {
           // Check if already exists
           if (sem.modules.some(m => m.code === code)) return sem;
+          const newModule = { code, title: code, units: 4 };
+          const modules = [...sem.modules];
+          if (insertAtIndex !== undefined && insertAtIndex >= 0) {
+            modules.splice(insertAtIndex, 0, newModule);
+          } else {
+            modules.push(newModule);
+          }
           return {
             ...sem,
-            modules: [...sem.modules, { code, title: code, units: 4 }],
+            modules,
             units: sem.units + 4
           };
         }
@@ -641,6 +741,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
 
     setIsDragging(false);
     setDragOverSemId(null);
+    setDragOverIndex(null);
     setDraggingModule(null);
   };
 
@@ -913,62 +1014,87 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
     <main className="flex-1 flex flex-col bg-slate-50 overflow-hidden relative">
 
       {/* Progression Dashboard */}
-      <div className="bg-white border-b border-slate-200 shadow-sm shrink-0 z-10">
+      <div 
+        style={{ height: !isProgressionOpen ? 44 : (isProgressionExpanded ? progressionHeight : 'auto') }}
+        className="bg-white border-b border-slate-200 shadow-sm shrink-0 z-10 flex flex-col transition-all duration-100 ease-out"
+      >
         {/* Summary Bar */}
-        <div className="px-6 py-2 flex items-center gap-8 justify-between">
-          <div className="flex items-center gap-6 flex-1">
-            <div className="flex items-center gap-2 min-w-[140px]">
-              <span className="material-symbols-outlined text-green-600">school</span>
-              <span className="text-sm font-bold text-slate-700">Graduation Progress</span>
-            </div>
+        <div className="px-6 py-2 flex items-center gap-8 justify-between shrink-0">
+          {!isProgressionOpen ? (
+            <button
+              onClick={() => setIsProgressionOpen(true)}
+              className="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">expand_more</span>
+              <span className="text-sm font-bold">Graduation Progress</span>
+            </button>
+          ) : (
+            <>
+              <div className="flex items-center gap-6 flex-1">
+                <div className="flex items-center gap-2 min-w-[140px]">
+                  <span className="material-symbols-outlined text-green-600">school</span>
+                  <span className="text-sm font-bold text-slate-700">Graduation Progress</span>
+                </div>
 
-            <div className="flex-1 max-w-2xl">
-              <div className="flex justify-between items-end mb-1">
-                <span className="text-xs font-bold text-slate-500">
-                  {progressionStats.total} <span className="text-slate-400 font-normal">/ {GRADUATION_MCS} MCs</span>
-                </span>
-                <div className="flex gap-3 text-[10px] font-bold">
-                  <span className="text-green-600 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500"></div>Completed</span>
-                  <span className="text-blue-500 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-500"></div>Current</span>
-                  <span className="text-amber-500 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-amber-400"></div>Planned</span>
+                <div className="flex-1 max-w-2xl">
+                  <div className="flex justify-between items-end mb-1">
+                    <span className="text-xs font-bold text-slate-500">
+                      {progressionStats.total} <span className="text-slate-400 font-normal">/ {GRADUATION_MCS} MCs</span>
+                    </span>
+                    <div className="flex gap-3 text-[10px] font-bold">
+                      <span className="text-green-600 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500"></div>Completed</span>
+                      <span className="text-blue-500 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-500"></div>Current</span>
+                      <span className="text-amber-500 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-amber-400"></div>Planned</span>
+                    </div>
+                  </div>
+                  <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden flex">
+                    {/* Completed (Green) */}
+                    <div
+                      className="h-full bg-green-500 transition-all duration-500"
+                      style={{ width: `${Math.min(100, (progressionStats.completed / GRADUATION_MCS) * 100)}%` }}
+                    ></div>
+                    {/* Current (Blue) */}
+                    <div
+                      className="h-full bg-blue-500 transition-all duration-500"
+                      style={{ width: `${Math.min(100, (progressionStats.current / GRADUATION_MCS) * 100)}%` }}
+                    ></div>
+                    {/* Planned (Yellow) */}
+                    <div
+                      className="h-full bg-amber-400 transition-all duration-500"
+                      style={{ width: `${Math.min(100, (progressionStats.planned / GRADUATION_MCS) * 100)}%` }}
+                    ></div>
+                    {/* Remaining (Red - Implicitly remaining space, but we can color it light red if we want full bar filled) */}
+                    <div className="flex-1 bg-red-100"></div>
+                  </div>
                 </div>
               </div>
-              <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden flex">
-                {/* Completed (Green) */}
-                <div
-                  className="h-full bg-green-500 transition-all duration-500"
-                  style={{ width: `${Math.min(100, (progressionStats.completed / GRADUATION_MCS) * 100)}%` }}
-                ></div>
-                {/* Current (Blue) */}
-                <div
-                  className="h-full bg-blue-500 transition-all duration-500"
-                  style={{ width: `${Math.min(100, (progressionStats.current / GRADUATION_MCS) * 100)}%` }}
-                ></div>
-                {/* Planned (Yellow) */}
-                <div
-                  className="h-full bg-amber-400 transition-all duration-500"
-                  style={{ width: `${Math.min(100, (progressionStats.planned / GRADUATION_MCS) * 100)}%` }}
-                ></div>
-                {/* Remaining (Red - Implicitly remaining space, but we can color it light red if we want full bar filled) */}
-                <div className="flex-1 bg-red-100"></div>
-              </div>
-            </div>
-          </div>
 
-          <button
-            onClick={() => setIsProgressionExpanded(!isProgressionExpanded)}
-            className="flex items-center gap-1.5 text-xs font-bold text-primary hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
-          >
-            <span>{isProgressionExpanded ? 'Hide Details' : 'View Requirements'}</span>
-            <span className={`material-symbols-outlined text-[18px] transition-transform ${isProgressionExpanded ? 'rotate-180' : ''}`}>expand_more</span>
-          </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsProgressionExpanded(!isProgressionExpanded)}
+                  className="flex items-center gap-1.5 text-xs font-bold text-primary hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  <span>{isProgressionExpanded ? 'Hide Details' : 'View Requirements'}</span>
+                  <span className={`material-symbols-outlined text-[18px] transition-transform ${isProgressionExpanded ? 'rotate-180' : ''}`}>expand_more</span>
+                </button>
+                <button
+                  onClick={() => setIsProgressionOpen(false)}
+                  className="text-slate-400 hover:text-slate-600 p-1 rounded hover:bg-slate-100 transition-colors"
+                  title="Collapse panel"
+                >
+                  <span className="material-symbols-outlined text-[18px]">expand_less</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Detailed Checklist (Scrollable Row) */}
-        {isProgressionExpanded && (
-          <div className="px-8 pb-4 pt-2 border-t border-slate-50 animate-in slide-in-from-top-2 fade-in duration-200">
-            <div className="flex gap-6 overflow-x-auto pb-4 custom-scrollbar snap-x">
-              {REQUIREMENTS.map((category, idx) => {
+        {isProgressionExpanded && isProgressionOpen && (
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <div className="px-8 pb-2 pt-2 border-t border-slate-50 animate-in slide-in-from-top-2 fade-in duration-200 flex-1 overflow-hidden">
+              <div className="flex gap-6 overflow-x-auto h-full custom-scrollbar snap-x">
+                {REQUIREMENTS.map((category, idx) => {
                 const fulfilledCount = category.courses.filter(c => checkRequirement(c.code)).length;
                 const isBreadthDepth = category.category.includes('Breadth');
 
@@ -1078,6 +1204,15 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
               })}
             </div>
           </div>
+            {/* Resize Handle */}
+            <div
+              onMouseDown={handleProgressionResize}
+              className="h-1.5 w-full bg-slate-200 hover:bg-primary cursor-ns-resize flex items-center justify-center transition-colors group shrink-0"
+              title="Drag to resize"
+            >
+              <div className="h-0.5 w-8 bg-slate-400 rounded-full group-hover:bg-white transition-colors"></div>
+            </div>
+          </div>
         )}
       </div>
 
@@ -1106,12 +1241,12 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                 <div className="flex justify-between items-end mb-6 pb-2 shrink-0 pointer-events-auto border-b border-slate-200">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-xl font-bold text-slate-800">{year.label}</h2>
+                      <h2 className="text-2xl font-bold text-slate-800">{year.label}</h2>
                     </div>
-                    <p className="text-xs font-medium mt-1 text-slate-500">{year.academicYear}</p>
+                    <p className="text-sm font-medium mt-1 text-slate-500">{year.academicYear}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">{yearTotalUnits} MCs</span>
+                    <span className="text-xs font-bold uppercase tracking-wide text-slate-400">{yearTotalUnits} MCs</span>
                   </div>
                 </div>
 
@@ -1134,41 +1269,47 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
 
                     // Determine semester background class
                     const semBgClass = isPastSemester
-                      ? 'bg-green-50/70 ring-1 ring-green-200'
+                      ? 'bg-green-50/70 ring-2 ring-green-300 border-2 border-green-200'
                       : isCurrentSemester
-                        ? 'bg-blue-50/70 ring-1 ring-blue-200'
-                        : '';
+                        ? 'bg-blue-50/70 ring-2 ring-blue-300 border-2 border-blue-200'
+                        : 'border-2 border-slate-200';
 
                     return (
                       <div
                         key={sem.id}
                         className={`flex flex-col gap-3 transition-colors rounded-xl p-2 -m-2 ${semBgClass} ${isDragTarget ? 'bg-blue-50/50 ring-2 ring-primary/30' : ''} ${sem.isExchange ? 'h-full max-h-[220px]' : ''} ${shakingSemId === sem.id ? 'animate-shake' : ''}`}
                         onDragEnter={() => handleDragEnter(sem.id)}
-                        onDragOver={handleDragOver}
-                        onDrop={(e) => handleDrop(e, sem.id)}
+                        onDragOver={(e) => {
+                          handleDragOver(e);
+                          // If hovering over empty area at the end, set index to end of list
+                          if (isDragging && dragOverSemId === sem.id && dragOverIndex === null) {
+                            setDragOverIndex(sem.modules.length);
+                          }
+                        }}
+                        onDrop={(e) => handleDrop(e, sem.id, dragOverIndex ?? sem.modules.length)}
                       >
 
                         {/* Semester Header */}
                         <div className="flex justify-between items-center px-1">
                           <div className="flex items-center gap-2">
-                            <span className={`text-xs font-bold ${isDragTarget ? 'text-primary' : isPastSemester ? 'text-green-700' : isCurrentSemester ? 'text-blue-700' : (sem.isExchange ? 'text-orange-600 uppercase tracking-wider' : (sem.name.includes('Special') ? 'text-amber-600' : 'text-slate-600'))}`}>
+                            <span className={`text-base font-bold ${isDragTarget ? 'text-primary' : isPastSemester ? 'text-green-700' : isCurrentSemester ? 'text-blue-700' : (sem.isExchange ? 'text-orange-600 uppercase tracking-wider' : (sem.name.includes('Special') ? 'text-amber-600' : 'text-slate-700'))}`}>
                               {sem.name}
                             </span>
                             {isPastSemester && !sem.isExchange && !sem.name.includes('Special') && (
-                              <span className="text-[9px] font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full uppercase">Completed</span>
+                              <span className="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full uppercase">Completed</span>
                             )}
                             {isCurrentSemester && !sem.isExchange && !sem.name.includes('Special') && (
-                              <span className="text-[9px] font-bold text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full uppercase">Current</span>
+                              <span className="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full uppercase">Current</span>
                             )}
                             {sem.isExchange && (
-                              <span className="material-symbols-outlined text-orange-400 text-[18px]">flight_takeoff</span>
+                              <span className="material-symbols-outlined text-orange-400 text-[20px]">flight_takeoff</span>
                             )}
                             {sem.name.includes('Special') && (
-                              <span className="material-symbols-outlined text-amber-400 text-[16px]">sunny</span>
+                              <span className="material-symbols-outlined text-amber-400 text-[18px]">sunny</span>
                             )}
                           </div>
                           <div className="flex items-center gap-2">
-                            {!sem.isExchange && <span className={`text-[10px] font-medium ${isPastSemester ? 'text-green-500' : isCurrentSemester ? 'text-blue-500' : 'text-slate-400'}`}>{currentSemUnits} MCs</span>}
+                            {!sem.isExchange && <span className={`text-xs font-medium ${isPastSemester ? 'text-green-500' : isCurrentSemester ? 'text-blue-500' : 'text-slate-400'}`}>{currentSemUnits} MCs</span>}
                             {sem.name.includes('Special') && (
                               <button
                                 onClick={() => deleteSpecialTerm(year.year, sem.id)}
@@ -1184,8 +1325,8 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                         {/* Modules List & Bottom Action */}
                         <div className="space-y-2 relative">
 
-                          {/* Existing Modules */}
-                          {sem.modules.map((mod) => {
+                          {/* Existing Modules with Drop Indicators */}
+                          {sem.modules.map((mod, modIndex) => {
                             const hasPrereqViolation = prereqViolations.has(mod.code);
                             const missingPrereqs = prereqViolations.get(mod.code) || [];
 
@@ -1199,82 +1340,116 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                               hasOfferingViolation ? offeringError : ''
                             ].filter(Boolean).join('. ');
 
+                            const showDropIndicatorBefore = isDragTarget && dragOverIndex === modIndex && draggingModule?.code !== mod.code;
+                            const showDropIndicatorAfter = isDragTarget && dragOverIndex === modIndex + 1 && modIndex === sem.modules.length - 1 && draggingModule?.code !== mod.code;
+
+                            // Determine card border color based on semester status
+                            const cardBorderClass = hasError
+                              ? 'border-red-500 bg-red-50 ring-1 ring-red-500'
+                              : isPastSemester
+                                ? 'border-green-400 hover:border-green-500 hover:shadow-md'
+                                : isCurrentSemester
+                                  ? 'border-blue-400 hover:border-blue-500 hover:shadow-md'
+                                  : 'border-amber-400 hover:border-amber-500 hover:shadow-md';
+
                             return (
-                              <div
-                                key={mod.code}
-                                draggable="true"
-                                onDragStart={(e) => handleDragStart(e, mod.code, 'semester', sem.id)}
-                                onDragEnd={handleDragEnd}
-                                onClick={() => setSelectedModuleCode(mod.code)}
-                                className={`bg-white p-3.5 rounded-lg border shadow-sm transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] group ${hasError
-                                  ? 'border-red-500 bg-red-50 ring-1 ring-red-500'
-                                  : 'border-slate-200 hover:border-primary/50 hover:shadow-md'
-                                  }`}
-                                title={combinedErrorMessage}
-                              >
-                                <div className="flex justify-between items-start">
-                                  <div className="flex-1">
-                                    <div className="flex items-center justify-between mb-0.5">
-                                      <div className="flex items-center gap-1.5">
-                                        <div className={`text-xs font-bold ${hasError ? 'text-red-700' : 'text-slate-800'}`}>{mod.code}</div>
-                                        {hasError && (
-                                          <span className="material-symbols-outlined text-red-500 text-[14px]" title={combinedErrorMessage}>warning</span>
-                                        )}
+                              <div key={mod.code}>
+                                {/* Drop Indicator Before */}
+                                {showDropIndicatorBefore && (
+                                  <div className="h-16 mb-2 border-2 border-dashed border-primary bg-primary/10 rounded-xl flex items-center justify-center animate-pulse">
+                                    <div className="flex items-center gap-2 text-primary">
+                                      <span className="material-symbols-outlined text-[20px]">vertical_align_bottom</span>
+                                      <span className="text-xs font-bold uppercase tracking-wider">Drop here</span>
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                <div
+                                  draggable="true"
+                                  onDragStart={(e) => handleDragStart(e, mod.code, 'semester', sem.id)}
+                                  onDragEnd={handleDragEnd}
+                                  onDragOver={(e) => handleDragOverModule(e, sem.id, modIndex)}
+                                  onDrop={(e) => handleDrop(e, sem.id, dragOverIndex ?? undefined)}
+                                  onClick={() => setSelectedModuleCode(mod.code)}
+                                  className={`bg-white p-4 rounded-xl border-[3px] shadow-sm transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] group ${
+                                    draggingModule?.code === mod.code ? 'opacity-50 scale-95' : ''
+                                  } ${cardBorderClass}`}
+                                  title={combinedErrorMessage}
+                                >
+                                  {/* Top Row: Module Code, MCs Badge, Delete Button, Drag Handle */}
+                                  <div className="flex items-center justify-between gap-2 mb-2">
+                                    <div className={`text-base font-bold ${hasError ? 'text-red-700' : 'text-slate-800'}`}>{mod.code}</div>
+                                    
+                                    <div className="flex items-center gap-2">
+                                      {hasError && (
+                                        <span className="material-symbols-outlined text-red-500 text-[18px]" title={combinedErrorMessage}>warning</span>
+                                      )}
+                                      <div className={`text-xs font-bold px-2.5 py-1 rounded ${hasError ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-600'}`}>
+                                        4 MCs
                                       </div>
-                                      <div className="flex items-center gap-1">
-                                        <div className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${hasError ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'}`}>
-                                          4 MCs
-                                        </div>
-                                        {/* Delete button */}
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setAcademicYears(prev => prev.map(y => ({
-                                              ...y,
-                                              semesters: y.semesters.map(s => {
-                                                if (s.id === sem.id) {
-                                                  return {
-                                                    ...s,
-                                                    modules: s.modules.filter(m => m.code !== mod.code),
-                                                    units: s.units - 4
-                                                  };
-                                                }
-                                                return s;
-                                              })
-                                            })));
-                                          }}
-                                          className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-red-100 rounded"
-                                          title="Remove module"
-                                        >
-                                          <span className="material-symbols-outlined text-red-400 hover:text-red-600 text-[14px]">close</span>
-                                        </button>
+                                      {/* Delete button */}
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setAcademicYears(prev => prev.map(y => ({
+                                            ...y,
+                                            semesters: y.semesters.map(s => {
+                                              if (s.id === sem.id) {
+                                                return {
+                                                  ...s,
+                                                  modules: s.modules.filter(m => m.code !== mod.code),
+                                                  units: s.units - 4
+                                                };
+                                              }
+                                              return s;
+                                            })
+                                          })));
+                                        }}
+                                        className="p-1 hover:bg-red-100 rounded transition-colors"
+                                        title="Remove module"
+                                      >
+                                        <span className="material-symbols-outlined text-red-400 hover:text-red-600 text-[18px]">close</span>
+                                      </button>
+                                      {/* Drag Handle */}
+                                      <div 
+                                        className="cursor-grab active:cursor-grabbing p-1 hover:bg-slate-100 rounded transition-colors"
+                                        title="Drag to move"
+                                      >
+                                        <span className="material-symbols-outlined text-slate-400 hover:text-slate-600 text-[18px]">drag_indicator</span>
                                       </div>
                                     </div>
-                                    <div className={`text-[10px] font-medium line-clamp-1 ${hasError ? 'text-red-600' : 'text-slate-500'}`}>{mod.title}</div>
-
-                                    {hasError && (
-                                      <div className="flex items-center gap-1 mt-2 text-red-600 bg-red-100/50 p-1.5 rounded">
-                                        <span className="material-symbols-outlined text-[14px]">error</span>
-                                        <span className="text-[10px] font-bold leading-none line-clamp-2">{combinedErrorMessage}</span>
-                                      </div>
-                                    )}
                                   </div>
-                                  {!hasError && (
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity ml-2">
-                                      <span className="material-symbols-outlined text-slate-300 text-[16px]">drag_indicator</span>
+
+                                  {/* Module Title */}
+                                  <div className={`text-sm font-medium line-clamp-1 ${hasError ? 'text-red-600' : 'text-slate-500'}`}>{mod.title}</div>
+
+                                  {hasError && (
+                                    <div className="flex items-center gap-1.5 mt-3 text-red-600 bg-red-100/50 p-2 rounded-lg">
+                                      <span className="material-symbols-outlined text-[16px]">error</span>
+                                      <span className="text-sm font-bold leading-tight line-clamp-2">{combinedErrorMessage}</span>
                                     </div>
                                   )}
                                 </div>
+
+                                {/* Drop Indicator After (only for last item) */}
+                                {showDropIndicatorAfter && (
+                                  <div className="h-16 mt-2 border-2 border-dashed border-primary bg-primary/10 rounded-xl flex items-center justify-center animate-pulse">
+                                    <div className="flex items-center gap-2 text-primary">
+                                      <span className="material-symbols-outlined text-[20px]">vertical_align_bottom</span>
+                                      <span className="text-xs font-bold uppercase tracking-wider">Drop here</span>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
 
-                          {/* Drop Zone Placeholder */}
-                          {isDragTarget && !sem.isExchange && (
-                            <div className="h-16 border-2 border-dashed border-primary/40 bg-primary/5 rounded-lg flex items-center justify-center animate-in fade-in zoom-in-95 duration-200">
-                              <div className="flex items-center gap-1 text-primary">
+                          {/* Drop Zone Placeholder - shown when dragging to empty area */}
+                          {isDragTarget && !sem.isExchange && sem.modules.length === 0 && (
+                            <div className="h-16 border-2 border-dashed border-primary bg-primary/10 rounded-xl flex items-center justify-center animate-pulse">
+                              <div className="flex items-center gap-2 text-primary">
                                 <span className="material-symbols-outlined text-[20px]">add_to_photos</span>
-                                <span className="text-[10px] font-bold uppercase tracking-wider">Drop Here</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">Drop Here</span>
                               </div>
                             </div>
                           )}
@@ -1393,10 +1568,10 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                           })() : (
                             <button
                               onClick={() => setAddingModuleSemId(sem.id)}
-                              className={`w-full border border-slate-200 border-dashed rounded-lg flex flex-col items-center justify-center gap-1 bg-slate-50/50 text-slate-400 hover:bg-slate-100 hover:border-slate-300 transition-all cursor-pointer group ${sem.modules.length === 0 ? 'h-20' : 'h-14'}`}
+                              className={`w-full border-2 border-slate-200 border-dashed rounded-lg flex flex-col items-center justify-center gap-1 bg-slate-50/50 text-slate-400 hover:bg-slate-100 hover:border-slate-300 transition-all cursor-pointer group ${sem.modules.length === 0 ? 'h-20' : 'h-14'}`}
                             >
-                              <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">add_circle</span>
-                              <span className="text-[10px] font-medium">Add Modules</span>
+                              <span className="material-symbols-outlined text-[22px] group-hover:scale-110 transition-transform">add_circle</span>
+                              <span className="text-xs font-medium">Add Modules</span>
                             </button>
                           )}
                         </div>
@@ -1444,15 +1619,24 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
       </div >
 
       {/* Bottom Part: Exempted Courses */}
-      < div
-        className={`bg-white border-t border-slate-200 shrink-0 z-30 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] transition-all duration-300 ease-in-out flex flex-col ${isBottomOpen
-          ? (isBottomExpanded ? 'h-56' : 'h-40')
-          : 'h-9'
-          }`}
+      <div
+        style={{ height: isBottomOpen ? (isBottomExpanded ? 224 : bottomHeight) : 36 }}
+        className="bg-white border-t border-slate-200 shrink-0 z-30 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] transition-all duration-100 ease-out flex flex-col"
       >
-        {/* Pull Up Handle with Minimize Button */}
-        < div
-          className="h-8 flex items-center justify-center relative bg-slate-50 border-b border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors group"
+        {/* Resize Handle */}
+        {isBottomOpen && !isBottomExpanded && (
+          <div
+            onMouseDown={handleBottomResize}
+            className="h-1.5 w-full bg-slate-200 hover:bg-primary cursor-ns-resize flex items-center justify-center transition-colors group shrink-0"
+            title="Drag to resize"
+          >
+            <div className="h-0.5 w-8 bg-slate-400 rounded-full group-hover:bg-white transition-colors"></div>
+          </div>
+        )}
+
+        {/* Header with Minimize/Expand Buttons */}
+        <div
+          className={`h-8 flex items-center justify-center relative bg-slate-50 border-b border-slate-200 transition-colors group shrink-0 ${!isBottomOpen ? 'cursor-pointer hover:bg-slate-100' : ''}`}
           onClick={() => !isBottomOpen && setIsBottomOpen(true)}
         >
           {!isBottomOpen && (
@@ -1462,30 +1646,26 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
             </div>
           )}
 
-          {
-            isBottomOpen && (
-              <button
-                onClick={(e) => { e.stopPropagation(); setIsBottomOpen(false); }}
-                className="flex items-center justify-center w-12 h-6 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded transition-colors"
-                title="Minimize"
-              >
-                <span className="material-symbols-outlined text-[16px]">expand_more</span>
-              </button>
-            )
-          }
+          {isBottomOpen && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsBottomOpen(false); }}
+              className="flex items-center justify-center w-12 h-6 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded transition-colors"
+              title="Minimize"
+            >
+              <span className="material-symbols-outlined text-[16px]">expand_more</span>
+            </button>
+          )}
 
-          {
-            isBottomOpen && (
-              <button
-                onClick={(e) => { e.stopPropagation(); setIsBottomExpanded(!isBottomExpanded); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-300 hover:text-slate-500 rounded hover:bg-slate-200/50 transition-colors"
-                title={isBottomExpanded ? "Restore Height" : "Maximize Height"}
-              >
-                <span className="material-symbols-outlined text-[18px]">{isBottomExpanded ? 'unfold_less' : 'unfold_more'}</span>
-              </button>
-            )
-          }
-        </div >
+          {isBottomOpen && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsBottomExpanded(!isBottomExpanded); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-300 hover:text-slate-500 rounded hover:bg-slate-200/50 transition-colors"
+              title={isBottomExpanded ? "Restore Height" : "Maximize Height"}
+            >
+              <span className="material-symbols-outlined text-[18px]">{isBottomExpanded ? 'unfold_less' : 'unfold_more'}</span>
+            </button>
+          )}
+        </div>
 
         <div className={`p-4 flex-1 overflow-hidden flex flex-col ${!isBottomOpen ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
           <div className="flex justify-between items-center mb-3 shrink-0">
@@ -1496,17 +1676,6 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
           </div>
 
           <div className="flex gap-6 overflow-x-auto pb-4 custom-scrollbar h-full items-start">
-            {/* Fixed 'Approved' Box - Still draggable for pre-req ignore */}
-            <div
-              draggable
-              onDragStart={(e) => handleDragStart(e, 'APPROVED_PREREQ', 'staged')}
-              onDragEnd={handleDragEnd}
-              className="w-40 h-24 shrink-0 border-2 border-cyan-400 border-dashed rounded-xl bg-cyan-50/30 flex flex-col items-center justify-center gap-1 cursor-grab active:cursor-grabbing hover:bg-cyan-50 transition-colors group relative"
-            >
-              <span className="material-symbols-outlined text-cyan-400 group-hover:scale-110 transition-transform text-[20px]">check_circle</span>
-              <span className="text-[10px] font-bold text-cyan-700 text-center px-2 leading-tight">Approved to ignore pre-req</span>
-            </div>
-
             {/* Dynamic Exempted Modules - Not draggable, with delete button */}
             {stagedModules.map(mod => (
               <div

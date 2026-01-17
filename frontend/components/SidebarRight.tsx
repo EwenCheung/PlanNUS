@@ -242,6 +242,17 @@ const SidebarRight: React.FC<SidebarRightProps> = ({ isOpen, toggle, currentPlan
                     </div>
                 </div>
             </aside>
+
+            {/* Collapsed Toggle Button */}
+            {!isOpen && (
+                <button
+                    onClick={toggle}
+                    className="h-full w-10 bg-white border-l border-slate-200 flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-all z-50 focus:outline-none group shadow-lg"
+                    title="Open AI Assistant"
+                >
+                    <span className="material-symbols-outlined text-primary group-hover:text-primary/80 transition-all text-[20px]">smart_toy</span>
+                </button>
+            )}
         </div>
     );
 };

@@ -58,6 +58,7 @@ const CS_FOCUS_AREAS = [
 
 const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYearChange, onCurrentSemesterChange, initialAcademicYear = '2024/2025', onDegreeChange, onMajorChange }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [width, setWidth] = useState(288); // Default w-72 = 288px
   const [hasExchange, setHasExchange] = useState(false);
   const [degree, setDegree] = useState<'computing' | 'bba'>('computing');
   const [yearOfStudy, setYearOfStudy] = useState('Y1S1');
@@ -70,6 +71,27 @@ const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYea
 
   // Tooltip states
   const [showLockedTooltip, setShowLockedTooltip] = useState<'major' | 'minor' | 'acadYear' | null>(null);
+
+  // Resize handler for left sidebar
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = width;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const delta = moveEvent.clientX - startX;
+      const newWidth = Math.min(Math.max(startWidth + delta, 220), 450); // Min 220px, Max 450px
+      setWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
   // Get majors based on selected degree
   const currentMajors = degree === 'computing' ? COMPUTING_MAJORS : BBA_MAJORS;
@@ -167,17 +189,21 @@ const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYea
     <div className="relative z-20 shrink-0 h-full flex items-start">
       {/* Sidebar Container */}
       <div
-        className={`h-full bg-white border-r border-slate-200 transition-all duration-300 ease-in-out overflow-hidden flex flex-col ${isOpen ? 'w-72 opacity-100' : 'w-0 opacity-0 border-none'}`}
+        style={{ width: isOpen ? width : 0 }}
+        className={`h-full bg-white border-r border-slate-200 transition-all duration-100 ease-out overflow-hidden flex flex-col ${isOpen ? 'opacity-100' : 'opacity-0 border-none'}`}
       >
-        <div className="w-72 flex flex-col h-full"> {/* Inner fixed width container */}
+        <div style={{ width: width }} className="flex flex-col h-full"> {/* Inner fixed width container */}
           <div className="p-5 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-sm font-bold text-slate-500 tracking-widest uppercase">Academic Plan</h2>
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-400 hover:text-primary hover:rotate-90 transition-all duration-300"
-            >
-              <span className="material-symbols-outlined text-[20px]">settings</span>
-            </button>
+            <div className="flex items-center gap-1">
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded hover:bg-slate-100"
+                title="Collapse sidebar"
+              >
+                <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+              </button>
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto overflow-x-hidden p-5 space-y-6 custom-scrollbar">
@@ -489,14 +515,24 @@ const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYea
         </div>
       </div>
 
-      {/* Full Height Toggle Bar */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`h-full bg-white border-r border-y border-slate-200 flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-all duration-300 z-50 focus:outline-none border-l-0 group ${isOpen ? 'w-5' : 'w-8'}`}
-        title={isOpen ? "Collapse Sidebar" : "Expand Sidebar"}
-      >
-        <span className={`material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-all text-[16px] ${isOpen ? '' : 'rotate-180'}`}>chevron_left</span>
-      </button>
+      {/* Resize Handle & Toggle */}
+      {isOpen ? (
+        <div
+          onMouseDown={handleMouseDown}
+          className="h-full w-1.5 bg-slate-200 hover:bg-primary cursor-ew-resize flex items-center justify-center transition-colors group"
+          title="Drag to resize"
+        >
+          <div className="w-0.5 h-8 bg-slate-400 rounded-full group-hover:bg-white transition-colors"></div>
+        </div>
+      ) : (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="h-full w-8 bg-white border-r border-y border-slate-200 flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-all duration-300 z-50 focus:outline-none border-l-0 group"
+          title="Expand Sidebar"
+        >
+          <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-all text-[16px] rotate-180">chevron_left</span>
+        </button>
+      )}
     </div>
   );
 };
