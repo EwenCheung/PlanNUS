@@ -3,6 +3,9 @@
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enable Vector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -29,6 +32,8 @@ CREATE TABLE IF NOT EXISTS modules (
     corequisite TEXT,
     attributes JSONB DEFAULT '{}'::jsonb,
     sentiment_tags JSONB DEFAULT '[]'::jsonb,
+    review_summary TEXT, -- Stores detailed AI-generated review summary
+    embedding vector(1536), -- OpenAI text-embedding-3-small
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -72,7 +77,6 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 
 -- Degree requirements table
--- Degree requirements table
 DROP TABLE IF EXISTS degree_requirements;
 CREATE TABLE IF NOT EXISTS degree_requirements (
     id SERIAL PRIMARY KEY,
@@ -86,6 +90,34 @@ CREATE TABLE IF NOT EXISTS degree_requirements (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     UNIQUE(major)
 );
+
+-- 3. Create the search function for the AI Agent
+create or replace function match_modules (
+  query_embedding vector(1536),
+  match_threshold float,
+  match_count int
+)
+returns table (
+  module_code varchar,
+  title varchar,
+  description text,
+  similarity float
+)
+language plpgsql
+as $$
+begin
+  return query
+  select
+    modules.module_code,
+    modules.title,
+    modules.description,
+    1 - (modules.embedding <=> query_embedding) as similarity
+  from modules
+  where 1 - (modules.embedding <=> query_embedding) > match_threshold
+  order by modules.embedding <=> query_embedding
+  limit match_count;
+end;
+$$;
 
 -- Create indexes for performance
 CREATE INDEX IF NOT EXISTS idx_modules_title ON modules USING gin(to_tsvector('english', title));

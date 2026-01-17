@@ -4,6 +4,7 @@ export interface Module {
   units?: number;
   hasError?: boolean;
   errorMessage?: string;
+  fluff?: boolean;
 }
 
 export interface Semester {
