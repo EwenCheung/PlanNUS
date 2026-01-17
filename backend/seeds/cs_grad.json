@@ -369,7 +369,9 @@
         "At least two Interdisciplinary courses required",
         "No more than one Cross-Disciplinary course",
         "Industry Experience: 6-12 units required, can be replaced by CP4101 if CAP >= 4.0",
-        "Minimum 12 units at level 4000 or above required"
+        "Minimum 12 units at level 4000 or above required",
+        "Preference: CS1101S, CS1231S, IS1108, MA1521, MA1522, ES2660, GEA1000(or DSA1101), CS2030S, CS2040S should be taken in year 1",
+        "Recommendation to student: MA1521, MA1522 can be taken in winter school"
       ]
     },
     {
@@ -538,7 +540,9 @@
         "BT4101 satisfies dissertation or industry experience requirements",
         "At least two Interdisciplinary courses required",
         "No more than one Cross-Disciplinary course",
-        "Programme Electives: Complete 5 electives (20 units), at least 3 Level-4000 courses, at least 3 BT-coded courses"
+        "Programme Electives: Complete 5 electives (20 units), at least 3 Level-4000 courses, at least 3 BT-coded courses",
+        "Preference: CS1010A, BT1101, IS1108, MA1521, MA1522, should be taken in year 1",
+        "Recommendation to student: MA1521, MA1522 can be taken in winter school"
       ]
     },
     {
@@ -720,7 +724,9 @@
         "Perception: Choose exactly one course",
         "Industry Experience: Other industry experience may be approved by the Department, certain NOC internships may count as CP-coded equivalents",
         "CP4101 Dissertation Option: GPA >= 4.00 required, completed at least 112 units (70%) required, mandatory for Honours (Highest Distinction), project selection occurs one semester in advance, replaces Industry Experience if taken",
-        "If ST2334 is precluded, ST2132 must be taken instead"
+        "If ST2334 is precluded, ST2132 must be taken instead",
+        "Preference: CS1101S, CS1231S, IS1108, MA1521, MA1522, ES2660, GEA1000(or DSA1101), CS2030S, CS2040S should be taken in year 1",
+        "Recommendation to student: MA1521, MA1522 can be taken in winter school"
       ]
     },
     {
@@ -893,7 +899,9 @@
         "At most one Cross-Disciplinary (CD) course",
         "Capstone Requirement: Choose either IFS4205 OR both CS4238 and IFS4103",
         "Information Security Electives: Complete exactly 8 units, CS4236 and MA4261 are mutually exclusive, other level-4000 or above courses may be approved by the School of Computing UG Office",
-        "Computing Requirements: Courses must be CS-coded, IS-coded, or CP-coded, CS-coded and IS-coded courses must be level-3000 or above, at least 6 units must be industrial experience courses"
+        "Computing Requirements: Courses must be CS-coded, IS-coded, or CP-coded, CS-coded and IS-coded courses must be level-3000 or above, at least 6 units must be industrial experience courses",
+        "Preference: CS1010, CS1231S, IS1108, MA1521, MA1522, GEA1000(or DSE1101), CS2030, CS2040C should be taken in year 1",
+        "Recommendation to student: MA1521, MA1522 can be taken in winter school"
       ]
     },
     {
@@ -1071,7 +1079,9 @@
         "At most one Cross-Disciplinary (CD) course",
         "Core Courses: 12 units for Industry Experience or CP4101 (if GPA >= 4.00)",
         "Programme Electives: Complete 5 courses (20 units), at least 3 courses must be level-4000 or above, all courses are 4 units each",
-        "Students with GPA >= 4.00 may replace Industry Experience with CP4101"
+        "Students with GPA >= 4.00 may replace Industry Experience with CP4101",
+        "Preference: CS1010A, CS1231S, IS1108, MA1521, MA1522, BT1101, BT2102 should be taken in year 1",
+        "Recommendation to student: MA1521, MA1522 can be taken in winter school"
       ]
     }
   ]
