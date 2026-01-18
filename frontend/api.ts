@@ -18,6 +18,7 @@ export interface UserPlanResponse {
         minYear: string;
         maxYear: string;
         academicYears: AcademicYear[];
+        exempted?: { code: string; title: string; units: number }[];
     } | null;
 }
 

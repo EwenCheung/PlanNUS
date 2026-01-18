@@ -520,40 +520,130 @@ def get_user_plan(user_id: str):
                 units += 4
         return {"id": sem_id, "name": name, "units": units, "modules": sem_modules}
     
-    # Build academic years from plan content
     academic_years = []
     start_year = plan_content.get('minYear', '2024/2025')
     start_year_num = int(start_year.split('/')[0]) if '/' in start_year else 2024
-    
-    for year_idx in range(1, 5):
-        # Regular semesters
-        sem1_mods = plan_content.get(f"y{year_idx}s1", [])
-        sem2_mods = plan_content.get(f"y{year_idx}s2", [])
-        s1_id = (year_idx - 1) * 4 + 1
-        s2_id = (year_idx - 1) * 4 + 2
-        semesters = [
-            build_semester(s1_id, "Semester 1", sem1_mods),
-            build_semester(s2_id, "Semester 2", sem2_mods)
-        ]
+
+    # Standard "NUSMods" export format uses a 'modules' map
+    if 'modules' in plan_content and isinstance(plan_content['modules'], dict):
+        modules_data = plan_content['modules']
         
-        # Special terms if they exist
-        st1_mods = plan_content.get(f"y{year_idx}st1", [])
-        st2_mods = plan_content.get(f"y{year_idx}st2", [])
-        if st1_mods:
-            s3_id = (year_idx - 1) * 4 + 3
-            semesters.append(build_semester(s3_id, "Special Term 1", st1_mods))
-        if st2_mods:
-            s4_id = (year_idx - 1) * 4 + 4
-            semesters.append(build_semester(s4_id, "Special Term 2", st2_mods))
+        # Organize modules by year and semester
+        # Structure: plan_map[year_idx][sem_num] = [(index, code), ...]
+        plan_map = {
+            1: {1: [], 2: [], 3: [], 4: []},
+            2: {1: [], 2: [], 3: [], 4: []},
+            3: {1: [], 2: [], 3: [], 4: []},
+            4: {1: [], 2: [], 3: [], 4: []}
+        }
         
-        academic_years.append({
-            "year": year_idx,
-            "label": f"Year {year_idx}",
-            "academicYear": f"{start_year_num + year_idx - 1}/{start_year_num + year_idx}",
-            "totalUnits": sum(s["units"] for s in semesters),
-            "semesters": semesters
-        })
+        exempted_modules = []
+
+        for key, item in modules_data.items():
+            mod_code = item.get('moduleCode')
+            if not mod_code: continue
+
+            year_str = item.get('year') # e.g. "2024/2025" or "-1"
+            sem_num = item.get('semester') # 1, 2, 3, 4
+            idx = item.get('index', 0)
+
+            if year_str == "-1":
+                exempted_modules.append(mod_code)
+                continue
+            
+            # Calculate year index (1-4)
+            try:
+                item_year_num = int(year_str.split('/')[0]) if '/' in year_str else 2024
+                year_idx = item_year_num - start_year_num + 1
+                
+                if 1 <= year_idx <= 4:
+                     # Check if sem_num is valid, default to 1
+                    s_num = int(sem_num) if sem_num else 1
+                    if s_num in plan_map[year_idx]:
+                        plan_map[year_idx][s_num].append((idx, mod_code))
+            except:
+                continue
+
+        # Build final structure
+        for year_idx in range(1, 5):
+            semesters = []
+            
+            # Helper to get sorted codes
+            def get_sorted_codes(y_idx, s_num):
+                items = plan_map[y_idx][s_num]
+                items.sort(key=lambda x: x[0]) # Sort by index
+                return [x[1] for x in items]
+
+            # Sem 1 & 2
+            s1_id = (year_idx - 1) * 4 + 1
+            s2_id = (year_idx - 1) * 4 + 2
+            semesters.append(build_semester(s1_id, "Semester 1", get_sorted_codes(year_idx, 1)))
+            semesters.append(build_semester(s2_id, "Semester 2", get_sorted_codes(year_idx, 2)))
+            
+            # Special Terms
+            st1_codes = get_sorted_codes(year_idx, 3)
+            st2_codes = get_sorted_codes(year_idx, 4)
+            
+            if st1_codes:
+                s3_id = (year_idx - 1) * 4 + 3
+                semesters.append(build_semester(s3_id, "Special Term 1", st1_codes))
+            if st2_codes:
+                s4_id = (year_idx - 1) * 4 + 4
+                semesters.append(build_semester(s4_id, "Special Term 2", st2_codes))
+            
+            academic_years.append({
+                "year": year_idx,
+                "label": f"Year {year_idx}",
+                "academicYear": f"{start_year_num + year_idx - 1}/{start_year_num + year_idx}",
+                "totalUnits": sum(s["units"] for s in semesters),
+                "semesters": semesters
+            })
+            
+    else:
+        # Legacy Format Handling (fallback)
+        exempted_modules = [] # Legacy didn't explicitly support this in same way or we ignore it
+        for year_idx in range(1, 5):
+            # Regular semesters
+            sem1_mods = plan_content.get(f"y{year_idx}s1", [])
+            sem2_mods = plan_content.get(f"y{year_idx}s2", [])
+            s1_id = (year_idx - 1) * 4 + 1
+            s2_id = (year_idx - 1) * 4 + 2
+            semesters = [
+                build_semester(s1_id, "Semester 1", sem1_mods),
+                build_semester(s2_id, "Semester 2", sem2_mods)
+            ]
+            
+            # Special terms if they exist
+            st1_mods = plan_content.get(f"y{year_idx}st1", [])
+            st2_mods = plan_content.get(f"y{year_idx}st2", [])
+            if st1_mods:
+                s3_id = (year_idx - 1) * 4 + 3
+                semesters.append(build_semester(s3_id, "Special Term 1", st1_mods))
+            if st2_mods:
+                s4_id = (year_idx - 1) * 4 + 4
+                semesters.append(build_semester(s4_id, "Special Term 2", st2_mods))
+            
+            academic_years.append({
+                "year": year_idx,
+                "label": f"Year {year_idx}",
+                "academicYear": f"{start_year_num + year_idx - 1}/{start_year_num + year_idx}",
+                "totalUnits": sum(s["units"] for s in semesters),
+                "semesters": semesters
+            })
     
+    # Process exempted modules details
+    processed_exempted = []
+    for code in exempted_modules:
+        mod = mod_map.get(code)
+        if mod:
+            processed_exempted.append({
+                "code": code,
+                "title": mod.get('title', code),
+                "units": int(mod.get('module_credit', 4))
+            })
+        else:
+            processed_exempted.append({"code": code, "title": code, "units": 4})
+
     return {
         "exists": True,
         "plan": {
@@ -561,7 +651,8 @@ def get_user_plan(user_id: str):
             "name": plan.get('name', 'My Plan'),
             "minYear": start_year,
             "maxYear": f"{start_year_num + 3}/{start_year_num + 4}",
-            "academicYears": academic_years
+            "academicYears": academic_years,
+            "exempted": processed_exempted
         }
     }
 
