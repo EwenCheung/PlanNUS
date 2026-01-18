@@ -36,7 +36,7 @@ const Signup: React.FC<SignupProps> = ({ onSignup, onSwitchToLogin }) => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-1 mb-2">
             <span className="text-2xl font-bold text-accent">NUS</span>
-            <span className="text-2xl font-bold text-primary">Study Planner</span>
+            <span className="text-2xl font-bold text-nus-blue">Planner</span>
           </div>
           <h2 className="text-xl font-bold text-slate-800">Create an Account</h2>
           <p className="text-slate-500 text-sm mt-1">Start planning your academic journey today.</p>

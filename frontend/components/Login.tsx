@@ -36,7 +36,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onGuestLogin, onSwitchToSignup }
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-1 mb-2">
             <span className="text-2xl font-bold text-accent">NUS</span>
-            <span className="text-2xl font-bold text-primary">Study Planner</span>
+            <span className="text-2xl font-bold text-nus-blue">Planner</span>
           </div>
           <p className="text-slate-500 text-sm">Welcome back! Please sign in to continue.</p>
         </div>
@@ -107,9 +107,9 @@ const Login: React.FC<LoginProps> = ({ onLogin, onGuestLogin, onSwitchToSignup }
       </div>
 
       <div className="absolute bottom-4 text-center w-full text-[10px] text-slate-400">
-        &copy; 2024 NUS Study Planner. All rights reserved.
+        &copy; 2024 NUS Planner. All rights reserved.
       </div>
-    </div>
+    </div >
   );
 };
 
