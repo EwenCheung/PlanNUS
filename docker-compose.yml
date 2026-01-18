@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Ensure database URL is accessible. If using remote supabase, .env is enough.
+      # If localhost is hardcoded in .env, it needs to be changed for docker networking 
+      # but typically supabase is remote.
+      - PORT=8000
+    volumes:
+      # Optional: Mount code for dev changes if desired, but keep simple for now
+      - ./backend:/app
+
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
