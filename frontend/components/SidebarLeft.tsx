@@ -70,7 +70,7 @@ const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYea
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Tooltip states
-  const [showLockedTooltip, setShowLockedTooltip] = useState<'major' | 'minor' | 'acadYear' | 'primaryMajor' | null>(null);
+  const [showLockedTooltip, setShowLockedTooltip] = useState<'major' | 'minor' | 'acadYear' | null>(null);
 
   // Resize handler for left sidebar
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -301,39 +301,16 @@ const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYea
 
               {/* Primary Major - Conditional based on degree */}
               <div className="space-y-1.5">
-                <div className="flex items-center gap-1.5">
-                  <label className="text-sm font-semibold text-slate-700 block">Primary Major</label>
-                  <button
-                    onMouseEnter={() => setShowLockedTooltip('primaryMajor')}
-                    onMouseLeave={() => setShowLockedTooltip(null)}
-                    className="text-slate-400 hover:text-slate-500"
-                  >
-                    <span className="material-symbols-outlined text-[14px]">info</span>
-                  </button>
-                  {showLockedTooltip === 'primaryMajor' && (
-                    <div className="absolute left-0 top-full mt-2 bg-slate-800 text-white text-xs p-3 rounded-lg shadow-lg z-50 w-64 animate-in fade-in slide-in-from-top-1">
-                      <p>Due to data access limitations, we currently only have manual data for selected majors.</p>
-                    </div>
-                  )}
-                </div>
+                <label className="text-sm font-semibold text-slate-700 block">Primary Major</label>
                 <div className="relative">
                   <select
                     value={primaryMajor}
                     onChange={(e) => handleMajorChange(e.target.value)}
                     className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-primary focus:border-primary block p-2.5 pr-8 cursor-pointer hover:border-slate-300 transition-colors outline-none font-medium"
                   >
-                    {currentMajors.map((major) => {
-                      const isAllowed = ['Computer Science', 'Business Analytics', 'Finance', 'Accountancy'].includes(major);
-                      return (
-                        <option
-                          key={major}
-                          value={major}
-                          disabled={!isAllowed}
-                        >
-                          {isAllowed ? major : `🔒 ${major}`}
-                        </option>
-                      );
-                    })}
+                    {currentMajors.map((major) => (
+                      <option key={major} value={major}>{major}</option>
+                    ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                     <span className="material-symbols-outlined text-[20px]">expand_more</span>

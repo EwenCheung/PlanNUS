@@ -168,17 +168,6 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
         .then(response => {
           if (response.exists && response.plan) {
             setAcademicYears(response.plan.academicYears);
-
-            // Restore exempted modules
-            if (response.plan.exempted && Array.isArray(response.plan.exempted)) {
-              const restoredStaged: StagedModule[] = response.plan.exempted.map((m: any) => ({
-                id: m.code,
-                code: m.code,
-                type: 'exempted',
-                mcs: m.units || 4
-              }));
-              setStagedModules(restoredStaged);
-            }
           }
           setLoading(false);
         })
@@ -839,14 +828,14 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
   const [editingModule, setEditingModule] = useState<StagedModule | null>(null);
 
   // Parse academic year string (e.g. "Year 1") to actual AY string (e.g. "2024/2025")
+  // Assuming Start Year is 2024 for this prototype
   const getAYString = (yearLabel: string) => {
-    const startYearNum = parseInt(startAcademicYear.split('/')[0]) || 2024;
+    const startYear = 2024;
     const yearIndex = parseInt(yearLabel.replace('Year ', '')) - 1;
-    return `${startYearNum + yearIndex}/${startYearNum + yearIndex + 1}`;
+    return `${startYear + yearIndex}/${startYear + yearIndex + 1}`;
   };
 
   const generateSavePayload = (years: AcademicYear[], staged: StagedModule[]) => {
-    const startYearNum = parseInt(startAcademicYear.split('/')[0]) || 2024;
     const modulesMap: Record<string, any> = {};
     let idCounter = 1;
 
@@ -854,11 +843,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
     years.forEach(year => {
       const ayString = getAYString(year.label);
       year.semesters.forEach(sem => {
-        let semNum = 1;
-        if (sem.name === 'Semester 2') semNum = 2;
-        else if (sem.name === 'Special Term 1') semNum = 3;
-        else if (sem.name === 'Special Term 2') semNum = 4;
-
+        const semNum = sem.name.includes('1') ? 1 : 2;
         sem.modules.forEach((mod, index) => {
           modulesMap[idCounter.toString()] = {
             id: idCounter.toString(),
@@ -886,8 +871,8 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
 
     // Generate export data
     const exportData = {
-      minYear: startAcademicYear,
-      maxYear: `${startYearNum + 3}/${startYearNum + 4}`,
+      minYear: "2024/2025",
+      maxYear: "2028/2029",
       iblocs: false,
       ignorePrereqCheck: true,
       modules: modulesMap,
