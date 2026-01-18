@@ -1308,7 +1308,7 @@ const MainBoard: React.FC<MainBoardProps> = ({ refreshTrigger = 0, saveTrigger =
                     return (
                       <div
                         key={sem.id}
-                        className={`flex flex-col gap-3 transition-colors rounded-xl p-2 -m-2 ${semBgClass} ${isDragTarget ? 'bg-blue-50/50 ring-2 ring-primary/30' : ''} ${sem.isExchange ? 'h-full max-h-[220px]' : ''} ${shakingSemId === sem.id ? 'animate-shake' : ''}`}
+                        className={`flex flex-col gap-3 transition-colors rounded-xl p-2 -m-2 ${semBgClass} ${isDragTarget ? 'bg-blue-50/50 ring-2 ring-primary/30' : ''} ${shakingSemId === sem.id ? 'animate-shake' : ''}`}
                         onDragEnter={() => handleDragEnter(sem.id)}
                         onDragOver={(e) => {
                           handleDragOver(e);
