@@ -661,7 +661,84 @@ def generate_study_plan(
         if c.code not in unique_courses:
             unique_courses[c.code] = c
     courses = list(unique_courses.values())
-    
+
+    # --- NEW: Validating Semester Offerings & Prerequisites from DB ---
+    try:
+        from app.supabase_client import get_supabase
+        supabase = get_supabase()
+        
+        # Get all codes to query
+        all_codes = [c.code for c in courses]
+        
+        # Query module_offerings AND prerequisites
+        # .in_() might fail if list is too huge, but usually < 100 for a plan
+        offerings_response = supabase.table('module_offerings').select(
+            'module_code, semester_1, semester_2'
+        ).in_('module_code', all_codes).execute()
+        
+        modules_response = supabase.table('modules').select(
+            'module_code, prerequisite_rule'
+        ).in_('module_code', all_codes).execute()
+        
+        offerings_map = {
+            item['module_code']: item 
+            for item in offerings_response.data
+        }
+        
+        modules_map = {
+            item['module_code']: item
+            for item in modules_response.data
+        }
+        
+        # Set of all valid codes in this plan (including exemptions)
+        valid_codes_set = set(all_codes)
+        if exempted_codes:
+            valid_codes_set.update(exempted_codes)
+
+        # Update course objects
+        for c in courses:
+            # 1. Update Offerings
+            if c.code in offerings_map:
+                data = offerings_map[c.code]
+                c.sem_offered = []
+                if data.get('semester_1'):
+                    c.sem_offered.append(1)
+                if data.get('semester_2'):
+                    c.sem_offered.append(2)
+                
+                if not c.sem_offered:
+                     c.sem_offered = [1, 2] 
+            
+            # 2. Update Prerequisites
+            if c.code in modules_map:
+                mod_data = modules_map[c.code]
+                prereq_text = mod_data.get('prerequisite_rule')
+                current_prereqs = []
+                
+                if prereq_text:
+                    # Extract codes using the same regex pattern as main.py
+                    found_codes = re.findall(r'[A-Z]{2,4}\d{4}[A-Z]?', prereq_text)
+                    # Deduplicate
+                    found_codes = list(set(found_codes))
+                    
+                    for p_code in found_codes:
+                        # Only enforce if prerequisite is ALSO in our plan (or exempted)
+                        # This prevents dropping courses that depend on things not in the degree map (e.g. A-Level inputs)
+                        if p_code in valid_codes_set:
+                            current_prereqs.append(p_code)
+                
+                # Combine with hardcoded ones if you want, or OVERWRITE.
+                # Overwriting is safer to avoid duplicates, but hardcoded might have "logical" prereqs.
+                # Let's overwrite but keep existing if DB empty? 
+                # Actually, effectively overwrite is better for "real data" goal.
+                # But let's Union them to be safe if DB is partial.
+                if current_prereqs:
+                     c.prereq = list(set(c.prereq + current_prereqs))
+
+    except Exception as e:
+        print(f"Warning: Failed to fetch module data: {e}")
+        # Proceed with default assumptions [1, 2]
+
     # Topological sort based on prerequisites
     sorted_codes = topological_sort(courses)
     

@@ -308,9 +308,15 @@ const SidebarLeft: React.FC<SidebarLeftProps> = ({ onGeneratePlan, onAcademicYea
                     onChange={(e) => handleMajorChange(e.target.value)}
                     className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-primary focus:border-primary block p-2.5 pr-8 cursor-pointer hover:border-slate-300 transition-colors outline-none font-medium"
                   >
-                    {currentMajors.map((major) => (
-                      <option key={major} value={major}>{major}</option>
-                    ))}
+                    {currentMajors.map((major) => {
+                      const isAllowed = ['Computer Science', 'Business Analytics', 'Finance', 'Accountancy'].includes(major);
+                      return (
+                        <option key={major} value={major} disabled={!isAllowed}>
+                          {isAllowed ? major : `🔒 ${major}`}
+                        </option>
+                      );
+                    })}
+                    <option value="" disabled>More coming soon...</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                     <span className="material-symbols-outlined text-[20px]">expand_more</span>
