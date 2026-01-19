@@ -30,6 +30,13 @@ NUSPlanner is a full-stack application that automatically generates valid study 
 
 ---
 
+## Demo
+
+- [Demo Video](https://youtu.be/x8QrYZg1saw)
+- [Presentation Deck](https://www.canva.com/design/DAG-l5_WG3k/iDb7GxTmBYV-La3gNx5Ksw/edit?utm_content=DAG-l5_WG3k&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+---
+
 ## Tech Stack
 
 ```
