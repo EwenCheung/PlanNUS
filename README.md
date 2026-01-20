@@ -28,6 +28,14 @@ If you would like to see a fully functional demo or need assistance, feel free t
 - **Sign In/Sign Up** is limited (Guest Login recommended).
 - Core features like **Course Planning** and **Reviews** are fully functional.
 
+
+## Demo
+
+
+<video src="assets/NUSPlanner_Final.mp4" controls="controls" style="max-width: 100%;"></video>
+
+- [Presentation Deck (PDF)](assets/NUSPlanner%20Presentation.pdf)
+
 ### ✨ Key Features
 
 | Feature | Description |
@@ -38,13 +46,6 @@ If you would like to see a fully functional demo or need assistance, feel free t
 | **SEP Integration** | Maps exchange modules from partner universities directly into your study plan |
 | **AI Course Assistant** | RAG-powered chatbot for course suggestions, reviews summary, and planning advice |
 | **Drag-and-Drop UI** | Intuitive interface to customize and rearrange your study plan |
-
----
-
-## Demo
-
-- [Demo Video](https://youtu.be/x8QrYZg1saw)
-- [Presentation Deck](https://www.canva.com/design/DAG-l5_WG3k/iDb7GxTmBYV-La3gNx5Ksw/edit?utm_content=DAG-l5_WG3k&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ---
 
