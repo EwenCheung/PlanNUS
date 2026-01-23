@@ -34,6 +34,7 @@ If you would like to see a fully functional demo or need assistance, feel free t
 
 <video src="assets/NUSPlanner_Final.mp4" controls="controls" style="max-width: 100%;"></video>
 
+- [!Quick Video Demo](https://www.youtube.com/watch?v=x8QrYZg1saw)
 - [Presentation Deck (PDF)](assets/NUSPlanner%20Presentation.pdf)
 
 ### ✨ Key Features
